@@ -264,6 +264,55 @@ MySQL [staff]>
 
 ```
 
+In order to practice python, we build python script to undecode bas64 passwords on staff database [extract_ica1_os_pass.py](https://github.com/badorius/vulnhub/blob/main/ica1//python/extract_ica1_os_pass.py). 
+
+The script is not necessary to be able to undecode base64 passwords, You could executed direct from bash:
+```shell
+echo -ne 'c3VSSkFkR3dMcDhkeTNyRg==' | base64 -d -
+```
+
+
+Install python venv package:
+
+```shell
+└─$ sudo apt install python3.10-venv
+```
+
+Create new virtual environment:
+
+```shell
+└─$ python3 -m venv python/venv
+```
+
+Load new environment:
+
+```shell
+source python/venv/bin/activate
+                                                                                                            
+┌──(venv)─-[~/git/vulnhub/ica1]
+└─$ 
+
+```
+
+Install mysql.connector-python:
+
+```shell
+└─$ pip install mysql-connector-python  
+Collecting mysql-connector-python
+  Downloading mysql_connector_python-8.0.30-cp310-cp310-manylinux1_x86_64.whl (25.4 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 25.4/25.4 MB 15.7 MB/s eta 0:00:00
+Collecting protobuf<=3.20.1,>=3.11.0
+  Downloading protobuf-3.20.1-cp310-cp310-manylinux_2_12_x86_64.manylinux2010_x86_64.whl (1.1 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.1/1.1 MB 8.9 MB/s eta 0:00:00
+Installing collected packages: protobuf, mysql-connector-python
+Successfully installed mysql-connector-python-8.0.30 protobuf-3.20.1
+                                                                                                            
+┌──(venv)─()-[~/…//vulnhub/ica1/python]
+└─$ 
+
+```
+
+
 >TO BE CONTINUED
 
 echo -ne 'c3VSSkFkR3dMcDhkeTNyRg==' | base64 -d -
