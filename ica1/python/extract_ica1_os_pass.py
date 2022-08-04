@@ -10,15 +10,16 @@ def mysql_select():
                                             password='UcVQCMQk2STVeS6J')
 
 
-        sql_select_Query = "select * from user join login using (id);"
+        sql_select_Query = "select * from user join login on (login.user_id = user.id);"
         cursor = connection.cursor()
         cursor.execute(sql_select_Query)
         # get all records
         records = cursor.fetchall()
 
         for row in records:
-            uncpass = base64.b64decode(row[5])
+            uncpass = base64.b64decode(row[6])
             print(row[2], uncpass)
+            #print(row)
 
     except mysql.connector.Error as e:
         print("Error reading data from MySQL table", e)
