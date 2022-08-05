@@ -62,7 +62,10 @@ def main():
     user_file = create_file(USER_FILE)
     pass_file = create_file(PASS_FILE)
     mysql_select(user_file, pass_file)
-    print('/usr/bin/hydra -L {} -P {} ssh://{}'.format(USER_FILE, PASS_FILE,HOST))
+    user_file.close()
+    pass_file.close()
+    cmd_hydra = '/usr/bin/hydra -L {} -P {} ssh://{}'.format(USER_FILE, PASS_FILE, HOST)
+    os.system(cmd_hydra)
 
 if __name__ == "__main__":
     main()
