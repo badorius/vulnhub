@@ -1,8 +1,8 @@
 # List of most used tools on arch:
 
 ```shell
-pacman -S nmap hashcat hashcat-utils openvpn
-yay -S rockyou seclists gobuster exploitdb hash-identifier
+pacman -S nmap hashcat hashcat-utils openvpn john
+yay -S rockyou seclists gobuster exploitdb hash-identifier responder ruby-evil-winrm
 ```
 
 
