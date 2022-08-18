@@ -1,0 +1,6 @@
+/images               (Status: 301) [Size: 315] [--> http://10.129.251.56/images/]
+/themes               (Status: 301) [Size: 315] [--> http://10.129.251.56/themes/]
+/uploads              (Status: 301) [Size: 316] [--> http://10.129.251.56/uploads/]
+/css                  (Status: 301) [Size: 312] [--> http://10.129.251.56/css/]
+/js                   (Status: 301) [Size: 311] [--> http://10.129.251.56/js/]
+/fonts                (Status: 301) [Size: 314] [--> http://10.129.251.56/fonts/]
