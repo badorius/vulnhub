@@ -5,6 +5,11 @@ pacman -S nmap hashcat hashcat-utils openvpn john
 yay -S rockyou seclists gobuster exploitdb hash-identifier responder ruby-evil-winrm aws-cli-git burpsuite
 ```
 
+#Tools
+zip2john -> to get hashes file
+hashid -> to identify hash type previus crack with john
+john -wordlist=./rockyou.txt hashes -> to bruteforce password
+sqlmap -> To find sql sql injection exploits.
 
 # Firefox Addons:
 
