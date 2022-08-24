@@ -2,7 +2,7 @@
 
 ```shell
 pacman -S nmap hashcat hashcat-utils openvpn john aws-cli
-yay -S rockyou seclists gobuster exploitdb hash-identifier responder ruby-evil-winrm burpsuite
+yay -S rockyou seclists gobuster exploitdb hash-identifier responder ruby-evil-winrm burpsuite maven
 ```
 
 #Tools
@@ -16,3 +16,7 @@ sqlmap -> To find sql sql injection exploits.
 [wappalyzer] (https://addons.mozilla.org/en-US/firefox/addon/wappalyzer/) 
 [cookie editor](https://cookie-editor.cgagnier.ca/)
 
+
+# GIT REPOS 
+
+[rogue-jndi](https://github.com/veracode-research/rogue-jndi)
