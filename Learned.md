@@ -92,7 +92,42 @@ bash: cannot set terminal process group (1612): Inappropriate ioctl for device
 bash: no job control in this shell
 www-data@three:/var/www/html$
 ```
-# Acronyms
+
+# XSS Cross site scripting
+
+Cross Site Scripting [XSS](https://owasp.org/www-community/attacks/xss/) 
+
+What is Node.js:
+Node.js is an open-source, cross-platform, back-end JavaScript runtime environment that can be used to build
+scalable network applications.
+
+What is Express:
+Express is a minimal and flexible Node.js web application framework that provides a robust set of features for web
+and mobile applications.
+
+What is a Template Engine?
+Template Engines are used to display dynamically generated content on a web page. They replace the
+variables inside a template file with actual values and display these values to the client (i.e. a user opening a
+page through their browser).
+For instance, if a developer needs to create a user profile page, which will contain Usernames, Emails,
+Birthdays and various other content, that is very hard if not impossible to achieve for multiple different
+users with a static HTML page. The template engine would be used here, along a static "template" that
+contains the basic structure of the profile page, which would then manually fill in the user information and
+display it to the user.
+Template Engines, like all software, are prone to vulnerabilities. The vulnerability that we will be focusing on
+today is called Server Side Template Injection (SSTI).
+
+What is an SSTI?
+Server-side template injection is a vulnerability where the attacker injects malicious input into a template in order
+to execute commands on the server.
+To put it plainly an SSTI is an exploitation technique where the attacker injects native (to the Template
+Engine) code into a web page. The code is then run via the Template Engine and the attacker gains code
+execution on the affected server.
+This attack is very common on Node.js websites and there is a good possibility that a Template Engine is
+being used to reflect the email that the user inputs in the contact field
+
+
+# INFO
 
 WinRM, is a Windows-native built-in remote management protocol. port: 5985
 NTLM: New Technology LAN Manager
