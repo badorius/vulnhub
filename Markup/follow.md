@@ -55,9 +55,9 @@ Nmap done: 1 IP address (1 host up) scanned in 22.09 seconds
 
 Open browser http://10.129.95.192 and access to login page:
 
-![login](.IMG/login.png)
+![login](IMG/login.png)
 
 After try some user/pass, we login with admin:password, let's go to order page:
-![order](.IMG/order.png)
+![order](IMG/order.png)
 
 
