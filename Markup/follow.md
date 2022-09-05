@@ -60,4 +60,8 @@ Open browser http://10.129.95.192 and access to login page:
 After try some user/pass, we login with admin:password, let's go to order page:
 ![order](IMG/order.png)
 
+Lets intercept submit buton with burpsuite:
 
+![submit order](IMG/burp_intercept_submit_order.png)
+
+Searching for a XML exploitation cheatsheet we are met with several examples such as the [following](https://book.hacktricks.xyz/pentesting-web/xxe-xee-xml-external-entity). 
