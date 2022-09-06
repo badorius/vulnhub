@@ -147,3 +147,40 @@ This file checks the username/password combination that the user submits against
 if (strcmp($username , $_POST['username']) == 0) {
   if (strcmp($password, $_POST['password']) == 0) {
 ```
+
+We see that developer is using the strcmp function to check the username and password, tis function is used to string compartation an returns 0 when the two imputted values are identical, but is is very insecure and bypassed without having a valid username and password.
+
+
+This is due to the fact that if strcmp is given an empty array to compare against the stored password, it will
+return NULL . In PHP the == operator only checks the value of a variable for equality, and the value of NULL
+is equal to 0 . The correct way to write this would be with the === operator which checks both value and
+type. These are prominently known as **"Type Juggling bugs"** 
+
+In PHP, variables can be easily converted into arrays if we add [] in front of them. For example:
+```html
+$username = "Admin"
+$username[] = "Admin"
+```
+
+Adding [] changes the variable $username to an array, which means that strcmp() will compare the array instead of a string:
+
+```html
+if (strcmp($username , $_POST['username']) == 0) {
+if (strcmp($password, $_POST['password']) == 0) {
+```
+
+In the above code we see that if the comparison succeeds and returns 0 , the login is successful. If we
+convert those variables into empty arrays ( $username[] & $password[] ), the comparison will return
+NULL , and NULL == 0 will return true, causing the login to be successful.
+
+Let's put in practice with burpsuite. On login screen, put admin:pass as credentials and send POST to repeater, change on repetear the following values: ```username=admin&password=pass``` for arrays as explained before ```username[]=admin&password[]=pass```:
+
+![burplogin](IMG/burplogin.png)
+
+Seems works fine, so, let's change to POST code on proxy tab and forward steps. Login bypassed:
+
+![upload](IMG/upload.png)
+
+# Foothold
+
+
