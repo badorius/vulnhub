@@ -321,7 +321,7 @@ john@base:~$
 
 It is rarely a good idea to allow a system user to run a binary with elevated privileges, as the default binaries
 on Linux often contain parameters that can be used to run system commands. A good list of these binaries
-can be found in the [GTFOBins](https://gtfobins.github.io/) website.
+can be found in the [GTFOBins](https://gtfobins.github.io/) website. Equivalent site for windows is [LOLBAS](https://lolbas-project.github.io/#)
 
 Acording GTFObins site run find command in order to privesc:
 ```shell
