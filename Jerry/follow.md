@@ -34,7 +34,7 @@ We can't access to list Applications:
 
 Try to login with tomcat/s3cret default password and manage app:
 
-![manager_yes](IMG/tomcat_manager_yes.jpb)
+![manager_yes](IMG/tomcat_manager_yes.jpg)
 
 # FootHold
 
