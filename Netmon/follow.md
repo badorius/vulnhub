@@ -47,6 +47,12 @@ zsh: segmentation fault  sudo nmap -sC -sV -Pn 10.129.96.142 -oN nmap.txt
 
 ```
 
+try to list smb shares without credentials:
+```shell
+└─$ smbclient -N -L 10.129.43.165
+session setup failed: NT_STATUS_ACCESS_DENIED
+```
+
 Let's take a look on this anonymous FTP:
 
 ```shell
