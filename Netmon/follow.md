@@ -233,9 +233,23 @@ Lets find prtgadmin user on some of this files:
 
 ```
 
+We try PrTg@admin2018 as password but doesn't work, since we have 3 files, .old.bak from 2018 and the others from 2019, let's try to login with prtgadmin:PrTg@admin2019:
 
+![PRTG HOME](IMG/prtg_home.jpg)
+
+Check PRTG Vuln:
 
 ```shell
+└──╼ $searchsploit PRTG
+------------------------------------------------------------------------------------------------------------------------------------------------------------ ---------------------------------
+ Exploit Title                                                                                                                                              |  Path
+------------------------------------------------------------------------------------------------------------------------------------------------------------ ---------------------------------
+PRTG Network Monitor 18.2.38 - (Authenticated) Remote Code Execution                                                                                        | windows/webapps/46527.sh
+PRTG Network Monitor 20.4.63.1412 - 'maps' Stored XSS                                                                                                       | windows/webapps/49156.txt
+PRTG Network Monitor < 18.1.39.1648 - Stack Overflow (Denial of Service)                                                                                    | windows_x86/dos/44500.py
+PRTG Traffic Grapher 6.2.1 - 'url' Cross-Site Scripting                                                                                                     | java/webapps/34108.txt
+------------------------------------------------------------------------------------------------------------------------------------------------------------ ---------------------------------
+Shellcodes: No Results
 
 ```
 
