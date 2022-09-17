@@ -121,7 +121,7 @@ Breakpoint 1 at 0x5555555551a9: file reto.c, line 15.
 
 We get memory address where we want to put shell code, we need to change [shell.py](shell.py) If we run shellp.py again with break point we've get check memory addres, after we need the stack return memmory address
 
-``shell
+```shell
 (gdb) x/40x $rsp
 0x7fffffffe510:	0xffffe6a8	0x00007fff	0x00008000	0x00000002
 0x7fffffffe520:	0x00000000	0x00000000	0x00000006	0x0000009e
