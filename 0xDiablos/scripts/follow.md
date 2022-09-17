@@ -1,8 +1,13 @@
+# Buffer overflow example 
 
-# 1 Buffer overflow:
+Disable randomize_va_space on kernel:
+```shell
+sudo sysctl kernel.randomize_va_space=0
+```
 
 Compile example
 ```shell
+#gcc -o reto reto.c -fno-stack-protector -z execstack -g -fPIE
 gcc -g -fno-stack-protector -z execstack -mpreferred-stack-boundary=4 -o reto reto.c
 ```
 
