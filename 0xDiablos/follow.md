@@ -233,4 +233,15 @@ BrokenPipeError: [Errno 32] Broken pipe
 
 But It doesn't work against server side. It's time to read more about buffer overflow, and CTF framework pwn. Recomended read [Hacking the art of explotation](https://repo.zenk-security.com/Magazine%20E-book/Hacking-%20The%20Art%20of%20Exploitation%20(2nd%20ed.%202008)%20-%20Erickson.pdf)
 
+Practice with local netcat, open netcat port with vuln file:
+```shell
+└─$ sudo ./vuln |nc -nlvp 1234
+listening on [any] 1234 ...
+```
+
+Send data to localhost:
+```shell
+
+```
+
 
