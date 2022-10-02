@@ -56,15 +56,15 @@ module.exports = {
 ```
 Lets register admin/admin User on web:
 
-[register admin/admin](IMG/register_admin.jpg)
+![register admin/admin](IMG/register_admin.jpg)
 
 Login with admin user:
 
-[login admin/admin](IMG/login_admin.jpg)
+![login admin/admin](IMG/login_admin.jpg)
 
 Get cookie info from browser:
 
-[cookie info](IMG/cookie_info.jpg)
+![cookie info](IMG/cookie_info.jpg)
 
 Read information about [JWT](https://book.hacktricks.xyz/pentesting-web/hacking-jwt-json-web-tokens)
 
