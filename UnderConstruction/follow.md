@@ -62,13 +62,105 @@ Login with admin user:
 
 ![login admin/admin](IMG/login_admin.jpg)
 
-Get cookie info from browser:
+Get JWT info from burpsuite:
 
-![cookie info](IMG/cookie_info.jpg)
+![burp jwt](IMG/burp_jwt.jpg)
 
-Read information about [JWT](https://book.hacktricks.xyz/pentesting-web/hacking-jwt-json-web-tokens)
+Read information about [JWT](https://book.hacktricks.xyz/pentesting-web/hacking-jwt-json-web-tokens), download jwt_tool from git and let's try 
 
 
-eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicGsiOiItLS0tLUJFR0lOIFBVQkxJQyBLRVktLS0tLVxuTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUE5NW9UbTlETnpjSHI4Z0xoalphWVxua3RzYmoxS3h4VU9vencwdHJQOTNCZ0lwWHY2V2lwUVJCNWxxb2ZQbFU2RkI5OUpjNVFaMDQ1OXQ3M2dnVkRRaVxuWHVDTUkyaG9VZkoxVm1qTmVXQ3JTckRVaG9rSUZaRXVDdW1laHd3dFVOdUV2MGV6QzU0WlRkRUM1WVNUQU96Z1xuaklXYWxzSGovZ2E1WkVEeDNFeHQwTWg1QUV3YkFENzMrcVhTL3VDdmhmYWpncHpIR2Q5T2dOUVU2MExNZjJtSFxuK0Z5bk5zak5Od281blJlN3RSMTJXYjJZT0N4dzJ2ZGFtTzFuMWtmL1NNeXBTS0t2T2dqNXkwTEdpVTNqZVhNeFxuVjhXUytZaVlDVTVPQkFtVGN6Mncya3pCaFpGbEg2Uks0bXF1ZXhKSHJhMjNJR3Y1VUo1R1ZQRVhwZENxSzNUclxuMHdJREFRQUJcbi0tLS0tRU5EIFBVQkxJQyBLRVktLS0tLVxuIiwiaWF0IjoxNjY0NjkyNDk4fQ.ZQWOUsFu3Rvy13ikJNqxXBKPTzPOub1D4KWxLpsZ1y5BSRxcZl2Wp3KNA09dcHAKaMb14xhAYWi8Eo65Q8g6M2-Ow2Xdj52n8oGJs-Ts2x4oojRicDTyI3FcaGUsP9N6MaVDwI3-5vITQyhIrLER2OW85-3gdFsrC6m4KkWY-YyYdFuGUGKi0WxMtXamGNjnIY-sJz20dURquNK8-drlfcXR8CCntwQFSXrfxmuRZSGFo3tJBzj0o9mMCPL2UetGP1P_47J3u5qvD_YXaJIQf-maeNqQs5CN-8ofc1WhnjCEI8LLPmLW4vjjD8Ci4gqB2iC4u76LMiOR_JmJJzUT5A
 
-eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicGsiOiItLS0tLUJFR0lOIFBVQkxJQyBLRVktLS0tLVxuTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUE5NW9UbTlETnpjSHI4Z0xoalphWVxua3RzYmoxS3h4VU9vencwdHJQOTNCZ0lwWHY2V2lwUVJCNWxxb2ZQbFU2RkI5OUpjNVFaMDQ1OXQ3M2dnVkRRaVxuWHVDTUkyaG9VZkoxVm1qTmVXQ3JTckRVaG9rSUZaRXVDdW1laHd3dFVOdUV2MGV6QzU0WlRkRUM1WVNUQU96Z1xuaklXYWxzSGovZ2E1WkVEeDNFeHQwTWg1QUV3YkFENzMrcVhTL3VDdmhmYWpncHpIR2Q5T2dOUVU2MExNZjJtSFxuK0Z5bk5zak5Od281blJlN3RSMTJXYjJZT0N4dzJ2ZGFtTzFuMWtmL1NNeXBTS0t2T2dqNXkwTEdpVTNqZVhNeFxuVjhXUytZaVlDVTVPQkFtVGN6Mncya3pCaFpGbEg2Uks0bXF1ZXhKSHJhMjNJR3Y1VUo1R1ZQRVhwZENxSzNUclxuMHdJREFRQUJcbi0tLS0tRU5EIFBVQkxJQyBLRVktLS0tLVxuIiwiaWF0IjoxNjY0NjkzMzM4fQ.q3CtIrHHkuu57mtLmKx88v6kthekDC23J8LrXotHnhJ9xYwxFLRuXYHXH6VBdtdwZZ-QQdbZPFDctGNv_6oIF44oJkX28SKEzwHOBckkYO_XDcVwra3mEPXZTp8j2zb6rB29KrptW0S3p4AREZMw3UW5kvAIly9bc8Pe2-6iOR_nv7Zn5Q5PLIoo2YlMQCppo7jQY3ML3gGy5O1S6usJKg1zr8u44tizK17BolgzoVzgPz-zUhPdya4jFJaHV29-lVYM1nUVF_pbXAJ9wyrdX1RipKDGPJj8YvnzSj95DkLzkEgPokWOrqPEkTgEsRmB5VUv0TdQ_P8_a93o3YiUvg
+We see on DBHelper.js file some interesting information. There are vars inside sql sentences, so may we can try inject some sql code with jwt_tool help.
+```shell
+cat ../../files/helpers/DBHelper.js ter 
+const sqlite = require('sqlite3');
+
+const db = new sqlite.Database('./database.db', err => {
+    if (!!err) throw err;
+    console.log('Connected to SQLite');
+});
+
+module.exports = {
+    getUser(username){
+        return new Promise((res, rej) => {
+            db.get(`SELECT * FROM users WHERE username = '${username}'`, (err, data) => {
+                if (err) return rej(err);
+                res(data);
+            });
+        });
+    },
+    checkUser(username){
+        return new Promise((res, rej) => {
+            db.get(`SELECT * FROM users WHERE username = ?`, username, (err, data) => {
+                if (err) return rej();
+                res(data === undefined);
+            });
+        });
+    },
+    createUser(username, password){
+        let query = 'INSERT INTO users(username, password) VALUES(?,?)';
+        let stmt = db.prepare(query);
+        stmt.run(username, password);
+        stmt.finalize();
+    },
+    attemptLogin(username, password){
+        return new Promise((res, rej) => {
+            db.get(`SELECT * FROM users WHERE username = ? AND password = ?`, username, password, (err, data) => {
+                if (err) return rej();
+                res(data !== undefined);
+            });
+        });
+    }
+}
+```
+
+Let's go ahead with first try:
+
+```shell
+./jwt_tool.py eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicGsiOiItLS0tLUJFR0lOIFBVQkxJQyBLRVktLS0tLVxuTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUE5NW9UbTlETnpjSHI4Z0xoalphWVxua3RzYmoxS3h4VU9vencwdHJQOTNCZ0lwWHY2V2lwUVJCNWxxb2ZQbFU2RkI5OUpjNVFaMDQ1OXQ3M2dnVkRRaVxuWHVDTUkyaG9VZkoxVm1qTmVXQ3JTckRVaG9rSUZaRXVDdW1laHd3dFVOdUV2MGV6QzU0WlRkRUM1WVNUQU96Z1xuaklXYWxzSGovZ2E1WkVEeDNFeHQwTWg1QUV3YkFENzMrcVhTL3VDdmhmYWpncHpIR2Q5T2dOUVU2MExNZjJtSFxuK0Z5bk5zak5Od281blJlN3RSMTJXYjJZT0N4dzJ2ZGFtTzFuMWtmL1NNeXBTS0t2T2dqNXkwTEdpVTNqZVhNeFxuVjhXUytZaVlDVTVPQkFtVGN6Mncya3pCaFpGbEg2Uks0bXF1ZXhKSHJhMjNJR3Y1VUo1R1ZQRVhwZENxSzNUclxuMHdJREFRQUJcbi0tLS0tRU5EIFBVQkxJQyBLRVktLS0tLVxuIiwiaWF0IjoxNjY0NzIxMjg1fQ.dxo7Z1PNUiH8cCnIEsB2DFdXiDNnyluY12d4JjaSmHCD_5os3iLzChVu9hJjNK9mDbX76qcX83kYoZYlkH5MuM_RT-3llOw4MTWACbb08M2Z0QOkFuoRKK3Zy7dFKSPOKzSuvlHHFOqMAYqlvlyE_Ao4vxsZmR0I7DzVO6VqMCJAygTtuRMLauD89wdAdsXlVYSqgcu70VY8J8oeDlQRKjDw5ua6xODjbfR7b3jFFZqnJBto0qq1IuGFvdvi0bKRW_9NlLtE96eohuXdHtTMln79DHZhyfGDQlbmR_lPwpcjGfmLmVYxI1ldOawNi4YMXzNGt99lh1tk81KxDntmRQ
+
+        \   \        \         \          \                    \ 
+   \__   |   |  \     |\__    __| \__    __|                    |
+         |   |   \    |      |          |       \         \     |
+         |        \   |      |          |    __  \     __  \    |
+  \      |      _     |      |          |   |     |   |     |   |
+   |     |     / \    |      |          |   |     |   |     |   |
+\        |    /   \   |      |          |\        |\        |   |
+ \______/ \__/     \__|   \__|      \__| \______/  \______/ \__|
+ Version 2.2.6                \______|             @ticarpi      
+
+Original JWT: 
+
+=====================
+Decoded Token Values:
+=====================
+
+Token header values:
+[+] alg = "RS256"
+[+] typ = "JWT"
+
+Token payload values:
+[+] username = "admin"
+[+] pk = "-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA95oTm9DNzcHr8gLhjZaY
+ktsbj1KxxUOozw0trP93BgIpXv6WipQRB5lqofPlU6FB99Jc5QZ0459t73ggVDQi
+XuCMI2hoUfJ1VmjNeWCrSrDUhokIFZEuCumehwwtUNuEv0ezC54ZTdEC5YSTAOzg
+jIWalsHj/ga5ZEDx3Ext0Mh5AEwbAD73+qXS/uCvhfajgpzHGd9OgNQU60LMf2mH
++FynNsjNNwo5nRe7tR12Wb2YOCxw2vdamO1n1kf/SMypSKKvOgj5y0LGiU3jeXMx
+V8WS+YiYCU5OBAmTcz2w2kzBhZFlH6RK4mquexJHra23IGv5UJ5GVPEXpdCqK3Tr
+0wIDAQAB
+-----END PUBLIC KEY-----
+"
+[+] iat = 1664721285    ==> TIMESTAMP = 2022-10-02 16:34:45 (UTC)
+
+----------------------
+JWT common timestamps:
+iat = IssuedAt
+exp = Expires
+nbf = NotBefore
+----------------------
+
+```
+
+
+
