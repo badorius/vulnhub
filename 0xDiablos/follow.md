@@ -183,7 +183,7 @@ It's time to play with python, after some research I found python [pwntools](htt
 In order to work on server side, we need offset, flag ebp addres, and two parameters  from fu nfunction flag, on ghidra we can get the adresses of both 0xdeadbeef and 0xc0ded00d:
 ![ghidra parms](IMG/ghidra_parms.jpg)
 
-Lets fun python time: 
+YES! It's fun python time: 
  
 ```python
 from pwn import *
