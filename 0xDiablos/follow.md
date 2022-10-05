@@ -31,9 +31,11 @@ file vuln                                                                       
 vuln: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux.so.2, BuildID[sha1]=ab7f19bb67c16ae453d4959fba4e6841d930a6dd, for GNU/Linux 3.2.0, not stripped
 ```
 
-To complete this practice it is necessary to understand buffer overflow. Read the following content:
+To complete this practice it is necessary to understand buffer overflow. Read the following content, I did some practices with basic c program:
 
 [reto](scripts/follow.md)
+
+To complete is recomended:  ghidra, gdb, python pwn, gdb-peda
 
 Open vuln file with ghidra, check functions and we find flag function with fgets, fgets like others can be overfloaded since var has been defined as char local_50 [64].
 
