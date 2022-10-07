@@ -1,0 +1,11 @@
+# Nmap 7.92 scan initiated Tue Oct  4 20:27:30 2022 as: nmap -sV --min-rate=1000 -p- -oN nmap.txt 10.129.139.63
+Nmap scan report for 10.129.139.63
+Host is up (0.030s latency).
+Not shown: 65533 closed tcp ports (conn-refused)
+PORT      STATE SERVICE VERSION
+22/tcp    open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.5 (Ubuntu Linux; protocol 2.0)
+27017/tcp open  mongodb MongoDB 3.6.8
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Tue Oct  4 20:27:47 2022 -- 1 IP address (1 host up) scanned in 16.93 seconds

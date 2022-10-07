@@ -1,0 +1,32 @@
+gdb-peda$ info functions 
+All defined functions:
+
+Non-debugging symbols:
+0x08049000  _init
+0x08049030  printf@plt
+0x08049040  gets@plt
+0x08049050  fgets@plt
+0x08049060  getegid@plt
+0x08049070  puts@plt
+0x08049080  exit@plt
+0x08049090  __libc_start_main@plt
+0x080490a0  setvbuf@plt
+0x080490b0  fopen@plt
+0x080490c0  setresgid@plt
+0x080490d0  _start
+0x08049110  _dl_relocate_static_pie
+0x08049120  __x86.get_pc_thunk.bx
+0x08049130  deregister_tm_clones
+0x08049170  register_tm_clones
+0x080491b0  __do_global_dtors_aux
+0x080491e0  frame_dummy
+0x080491e2  flag
+0x08049272  vuln
+0x080492b1  main
+0x08049330  __libc_csu_init
+0x08049390  __libc_csu_fini
+0x08049391  __x86.get_pc_thunk.bp
+0x08049398  _fini
+gdb-peda$ 
+
+
