@@ -1,2 +1,0 @@
-/auth                 (Status: 200) [Size: 2149]
-/logout               (Status: 302) [Size: 27] [--> /auth]

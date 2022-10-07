@@ -1,2 +1,0 @@
-/download             (Status: 200) [Size: 2489147]
-/console              (Status: 200) [Size: 1563]
