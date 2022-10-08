@@ -43,3 +43,7 @@
 [UnderConstruction](https://github.com/badorius/vulnhub/blob/main/hackthebox/UnderConstruction/follow.md)
 
 [Mongod](https://github.com/badorius/vulnhub/blob/main/hackthebox/Mongod/follow.md)
+
+[Pinned](https://github.com/badorius/vulnhub/blob/main/hackthebox/Pinned/follow.md)
+
+[Jeeves](https://github.com/badorius/vulnhub/blob/main/hackthebox/Jeeves/follow.md)
