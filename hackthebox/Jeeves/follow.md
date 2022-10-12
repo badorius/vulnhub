@@ -288,3 +288,9 @@ Legend: code, data, rodata, value
 Stopped reason: SIGSEGV
 0x0000555555556060 in ?? ()
 ```
+
+Let's create flag file:
+
+```shell
+echo "hola" > flag.txt
+```
