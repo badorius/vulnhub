@@ -1,0 +1,48 @@
+[m    dep:03 => 0x5555555551f5 <main+12>:	mov    DWORD PTR [rbp-0x4],0xdeadc0d3[0m
+[m           |-- DWORD PTR [rbp-0x4]: 0x7fff [0m
+[m    dep:03 => 0x5555555551fc <main+19>:	lea    rdi,[rip+0xe05]        # 0x555555556008[0m
+[m           |-- rdi: 0x1 [0m
+[m           |-- [rip+0xe05]        : 0x200 [0m
+[m    dep:03 => 0x555555555203 <main+26>:	mov    eax,0x0[0m
+[m           |-- eax: 0x555551e9 [0m
+[m    dep:03 => 0x555555555208 <main+31>:	call   0x5555555550a0 <printf@plt>[0m
+[m           |-- arg[0]: [;32m0x555555556008[0m ("Hello, good sir!\nMay I have your name? ")[0m
+[m     dep:04 => 0x5555555550a0 <printf@plt>:	endbr64[0m
+[m     dep:04 => 0x5555555550a4 <printf@plt+4>:	bnd jmp QWORD PTR [rip+0x2efd]        # 0x555555557fa8 <printf@got.plt>[0m
+[m    dep:03 => 0x55555555520d <main+36>:	lea    rax,[rbp-0x40][0m
+[m           |-- rax: 0x27 ("'")[0m
+[m           |-- [rbp-0x40]: 0x0 [0m
+[m    dep:03 => 0x555555555211 <main+40>:	mov    rdi,rax[0m
+[m           |-- rdi: [;34m0x7fffffffe0a0[0m --> [;31m0x7ffff7dfc160[0m (<funlockfile>:	endbr64)[0m
+[m           |-- rax: [;34m0x7fffffffe600[0m --> 0x0 [0m
+[m    dep:03 => 0x555555555214 <main+43>:	mov    eax,0x0[0m
+[m           |-- eax: 0xffffe600 [0m
+[m    dep:03 => 0x555555555219 <main+48>:	call   0x5555555550d0 <gets@plt>[0m
+[m           |-- arg[0]: [;34m0x7fffffffe600[0m --> 0x0 [0m
+[m     dep:04 => 0x5555555550d0 <gets@plt>:	endbr64[0m
+[m     dep:04 => 0x5555555550d4 <gets@plt+4>:	bnd jmp QWORD PTR [rip+0x2ee5]        # 0x555555557fc0 <gets@got.plt>[0m
+[m    dep:03 => 0x55555555521e <main+53>:	lea    rax,[rbp-0x40][0m
+[m           |-- rax: [;34m0x7fffffffe600[0m --> 0x0 [0m
+[m           |-- [rbp-0x40]: 0x6c6b616a ('jakl')[0m
+[m    dep:03 => 0x555555555222 <main+57>:	mov    rsi,rax[0m
+[m           |-- rsi: 0x1 [0m
+[m           |-- rax: [;34m0x7fffffffe600[0m --> 0x0 [0m
+[m    dep:03 => 0x555555555225 <main+60>:	lea    rdi,[rip+0xe04]        # 0x555555556030[0m
+[m           |-- rdi: [;34m0x7ffff7f87960[0m --> 0x0 [0m
+[m           |-- [rip+0xe04]        : 0x656d616e ('name')[0m
+[m    dep:03 => 0x55555555522c <main+67>:	mov    eax,0x0[0m
+[m           |-- eax: 0xffffe600 [0m
+[m    dep:03 => 0x555555555231 <main+72>:	call   0x5555555550a0 <printf@plt>[0m
+[m           |-- arg[0]: [;32m0x555555556030[0m ("Hello %s, hope you have a good day!\n")[0m
+[m           |-- arg[1]: [;34m0x7fffffffe600[0m --> 0x0 [0m
+[m     dep:04 => 0x5555555550a0 <printf@plt>:	endbr64[0m
+[m     dep:04 => 0x5555555550a4 <printf@plt+4>:	bnd jmp QWORD PTR [rip+0x2efd]        # 0x555555557fa8 <printf@got.plt>[0m
+[m    dep:03 => 0x555555555236 <main+77>:	cmp    DWORD PTR [rbp-0x4],0x1337bab3[0m
+[m           |-- DWORD PTR [rbp-0x4]: 0xdeadc0d3 [0m
+[m    dep:03    0x555555555236:	cmp    DWORD PTR [rbp-0x4],0x1337bab3[0m
+[m    dep:03 => 0x55555555523d <main+84>:	jne    0x5555555552a8 <main+191>[0m
+[m           |-- DWORD PTR [rbp-0x4]: 0xdeadc0d3 [0m
+[m    dep:03 => 0x5555555552a8 <main+191>:	mov    eax,0x0[0m
+[m           |-- eax: 0x3e ('>')[0m
+[m    dep:03 => 0x5555555552ad <main+196>:	leave[0m
+[m    dep:03 => 0x5555555552ae <main+197>:	ret[0m
