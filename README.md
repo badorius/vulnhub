@@ -47,3 +47,5 @@
 [Pinned](https://github.com/badorius/vulnhub/blob/main/hackthebox/Pinned/follow.md)
 
 [Jeeves](https://github.com/badorius/vulnhub/blob/main/hackthebox/Jeeves/follow.md)
+
+[Cap](https://github.com/badorius/vulnhub/blob/main/hackthebox/Cap/follow.md)
