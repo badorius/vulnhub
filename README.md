@@ -49,3 +49,5 @@
 [Jeeves](https://github.com/badorius/vulnhub/blob/main/hackthebox/Jeeves/follow.md)
 
 [Cap](https://github.com/badorius/vulnhub/blob/main/hackthebox/Cap/follow.md)
+
+[ScriptKiddie](https://github.com/badorius/vulnhub/blob/main/hackthebox/ScriptKiddie/follow.md)
