@@ -53,4 +53,20 @@ Open in browser:
 
 ![home](IMG/web/jpg)
 
+Send type some "injection" char on search sploits input box and the following message appears "stop hacking me - well hack you back"
 
+![stophackme](IMG/stophackme.png)
+
+while a tcpdump session is running in our computer:
+
+```shell
+sudo tcpdump -vvv -i tun0 -w k1ds.pcap                                                                                               1   
+[sudo] password for darthv: 
+tcpdump: listening on tun0, link-type RAW (Raw IP), snapshot length 262144 bytes
+^C34 packets captured
+34 packets received by filter
+0 packets dropped by kernel
+
+```
+
+Lets take a look on pcap file:
