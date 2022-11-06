@@ -330,17 +330,11 @@ Do you want to choose a custom payload? y/n (n use default payload)
 
 id
 uid=0(root) gid=1000(kid) groups=1000(kid)
-ls 
-GCONV_PATH=.
-exploit
-html
-linpeas.sh
-logs
-payload.so
-pkexec-exploit
+cd /root
+ls
+root.txt
 snap
-user.txt
-cat user.txt
-09028e17d66ea64b9c4dfe58096962f1
+cat root.txt
+3b219ae4a2ecfe4b7550cb8438ef45ac
 
 ```
