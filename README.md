@@ -53,3 +53,5 @@
 [ScriptKiddie](https://github.com/badorius/vulnhub/blob/main/hackthebox/ScriptKiddie/follow.md)
 
 [Reg](https://github.com/badorius/vulnhub/blob/main/hackthebox/Reg/follow.md)
+
+[ShootingStar](https://github.com/badorius/vulnhub/blob/main/hackthebox/ShootingStar/follow.md)
