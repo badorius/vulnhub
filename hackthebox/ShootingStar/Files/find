@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-attack = 'A' * 350
+attack = 'A' * 150
 
 for i in range(0,5):
    for j in range(0,10):

