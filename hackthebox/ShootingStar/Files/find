@@ -1,0 +1,11 @@
+#!/usr/bin/python
+
+attack = 'A' * 350
+
+for i in range(0,5):
+   for j in range(0,10):
+      attack += str(i) + str(j)
+
+print (1)
+print (attack)
+
