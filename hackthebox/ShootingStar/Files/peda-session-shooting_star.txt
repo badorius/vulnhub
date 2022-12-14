@@ -1,5 +1,2 @@
-break * star+77
-
-
-
+break * star+169
 
