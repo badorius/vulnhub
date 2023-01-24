@@ -55,3 +55,5 @@
 [Reg](https://github.com/badorius/vulnhub/blob/main/hackthebox/Reg/follow.md)
 
 [ShootingStar](https://github.com/badorius/vulnhub/blob/main/hackthebox/ShootingStar/follow.md)
+
+[Precious](https://github.com/badorius/vulnhub/blob/main/hackthebox/Precious/follow.md)
