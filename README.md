@@ -57,3 +57,5 @@
 [ShootingStar](https://github.com/badorius/vulnhub/blob/main/hackthebox/ShootingStar/follow.md)
 
 [Precious](https://github.com/badorius/vulnhub/blob/main/hackthebox/Precious/follow.md)
+
+[Stocker](https://github.com/badorius/vulnhub/blob/main/hackthebox/Stocker/follow.md)
