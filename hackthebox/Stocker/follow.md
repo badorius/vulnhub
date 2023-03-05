@@ -67,7 +67,7 @@ At this point we http, ssh, and name from Head of IT, lets try to search vhosts 
 
 fuzz vhosts:
 
-````shell
+```shell
 
 ╰─ ffuf -w /usr/share/seclists/Discovery/DNS/namelist.txt -u http://stocker.htb -H "Host: FUZZ.stocker.htb" |grep -v "Status: 301"                                                       ─╯
 
@@ -94,4 +94,21 @@ ________________________________________________
 
 dev                     [Status: 302, Size: 28, Words: 4, Lines: 1, Duration: 42ms]
 :: Progress: [151265/151265] :: Job [1/1] :: 1172 req/sec :: Duration: [0:02:13] :: Errors: 0 ::
+```
+
+Add entrie on /etc/hosts:
+
+```shell
+echo '10.129.237.131 dev.stocker.htb' >> /etc/hosts
+```
+
+Now let's check this vhost on browser:
+[DEV_LOGIN](IMG/DEV_LOGIN.jpg)
+
+
+Let's enumerate dev login vhost:
+
+````shell
+╰─ whatweb http://dev.stocker.htb/login |tee -a what_web_devlogin.txt                                                                                                                    ─╯
+http://dev.stocker.htb/login [200 OK] Bootstrap, Cookies[connect.sid], Country[RESERVED][ZZ], HTML5, HTTPServer[Ubuntu Linux][nginx/1.18.0 (Ubuntu)], HttpOnly[connect.sid], IP[10.129.237.131], Meta-Author[Mark Otto, Jacob Thornton, and Bootstrap contributors], MetaGenerator[Hugo 0.84.0], PasswordField[password], Script, Title[Stockers Sign-in], X-Powered-By[Express], nginx[1.18.0]
 ```

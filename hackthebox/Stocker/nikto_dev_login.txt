@@ -1,0 +1,26 @@
+- Nikto v2.1.6
+---------------------------------------------------------------------------
++ Target IP:          10.129.237.131
++ Target Hostname:    dev.stocker.htb
++ Target Port:        80
++ Start Time:         2023-03-05 19:32:33 (GMT1)
+---------------------------------------------------------------------------
++ Server: nginx/1.18.0 (Ubuntu)
++ Retrieved x-powered-by header: Express
++ Server leaks inodes via ETags, header found with file /login/, fields: 0xW/a6b 0x184e6db4279 
++ The anti-clickjacking X-Frame-Options header is not present.
++ The X-XSS-Protection header is not defined. This header can hint to the user agent to protect against some forms of XSS
++ The X-Content-Type-Options header is not set. This could allow the user agent to render the content of the site in a different fashion to the MIME type
++ OSVDB-5737: WebLogic may reveal its internal IP or hostname in the Location header. The value is "http://stocker.htb".
++ Allowed HTTP Methods: GET, HEAD, POST 
++ 26129 requests: 0 error(s) and 7 item(s) reported on remote host
++ End Time:           2023-03-05 19:48:44 (GMT1) (971 seconds)
+---------------------------------------------------------------------------
++ 1 host(s) tested
+
+
+      *********************************************************************
+      Portions of the server's headers (nginx/1.18.0) are not in
+      the Nikto database or are newer than the known string. Would you like
+      to submit this information (*no server specific data*) to CIRT.net
+      for a Nikto update (or you may email to sullo@cirt.net) (y/n)? 
