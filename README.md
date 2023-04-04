@@ -6,10 +6,6 @@
 
 [Archetype](https://github.com/badorius/vulnhub/blob/main/hackthebox/Archetype/follow.md)
 
-[02breakout](https://github.com/badorius/vulnhub/blob/main/hackthebox/02breakout/follow.md)
-
-[Three](https://github.com/badorius/vulnhub/blob/main/hackthebox/Three/follow.md)
-
 [Oopsie](https://github.com/badorius/vulnhub/blob/main/hackthebox/Oopsie/follow.md)
 
 [Vaccine](https://github.com/badorius/vulnhub/blob/main/hackthebox/Vaccine/follow.md)
