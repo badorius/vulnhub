@@ -18,15 +18,11 @@
 
 [EasyRSA](https://github.com/badorius/vulnhub/blob/main/hackthebox/EasyRSA/follow.md)
 
-[Blue](https://github.com/badorius/vulnhub/blob/main/hackthebox/Blue/follow.md)
-
 [Base](https://github.com/badorius/vulnhub/blob/main/hackthebox/Base/follow.md)
 
 [Tactics](https://github.com/badorius/vulnhub/blob/main/hackthebox/Tactics/follow.md)
 
 [Pennyworth](https://github.com/badorius/vulnhub/blob/main/hackthebox/Pennyworth/follow.md)
-
-[OpenSource](https://github.com/badorius/vulnhub/blob/main/hackthebox/OpenSource/follow.md)
 
 [Markup](https://github.com/badorius/vulnhub/blob/main/hackthebox/Markup/follow.md)
 
@@ -55,3 +51,5 @@
 [Precious](https://github.com/badorius/vulnhub/blob/main/hackthebox/Precious/follow.md)
 
 [Stocker](https://github.com/badorius/vulnhub/blob/main/hackthebox/Stocker/follow.md)
+
+
